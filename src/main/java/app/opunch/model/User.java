@@ -11,7 +11,7 @@ public class User {
     private String surname;
 
     private Group group;
-    private String lastLogEvent;
+    private PunchLog lastLog;
 
     // Constructor vacío
     public User(){};
@@ -41,9 +41,14 @@ public class User {
         this.group = group;
     }
 
-    // Si el usuario está activo o no
+    // Comprueba si el usuario está activo o no
     public boolean  isActive() {
-        return lastLogEvent.equals("IN");
+        // Si es el primer log, devolvemos FALSE
+        if (lastLog == null)
+            return false;
+
+        // Si no es el primer log, dependiendo del log anterior devolvemos TRUE (IN) o FALSE (OUT)
+        return lastLog.getEvent().equals("IN");
     }
     public void setActive(boolean active) {}
 
@@ -111,10 +116,10 @@ public class User {
         this.group = group;
     }
 
-    public String getLastLogEvent() {
-        return lastLogEvent;
+    public PunchLog getLastLog() {
+        return lastLog;
     }
-    public void setLastLogEvent(String lastLogEvent) {
-        this.lastLogEvent = lastLogEvent;
+    public void setLastLog(PunchLog lastLog) {
+        this.lastLog = lastLog;
     }
 }

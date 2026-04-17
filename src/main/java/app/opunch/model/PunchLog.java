@@ -53,10 +53,16 @@ public class PunchLog {
         this.logTime = logTime;
     }
 
+    public String getEvent() {
+        return event;
+    }
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
