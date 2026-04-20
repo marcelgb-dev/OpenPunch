@@ -45,3 +45,20 @@ CREATE TABLE `work_sessions` (
   CONSTRAINT `fk_session_start` FOREIGN KEY (`start_log_id`) REFERENCES `punch_logs` (`id`),
   CONSTRAINT `fk_session_end` FOREIGN KEY (`end_log_id`) REFERENCES `punch_logs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE OR REPLACE VIEW view_user_status AS
+SELECT
+    u.*,
+    l.id AS last_log_id,
+    l.log_time AS last_log_time,
+    l.event
+FROM
+    users u
+        LEFT JOIN
+    punch_logs l ON l.id = (
+        SELECT id
+        FROM punch_logs
+        WHERE user_id = u.id
+        ORDER BY log_time DESC, id DESC
+    LIMIT 1
+    );

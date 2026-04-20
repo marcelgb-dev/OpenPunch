@@ -30,7 +30,10 @@ docker run -d \
   -e MYSQL_DATABASE=${DB_NAME} \
   -v "${DATA_FOLDER}":/var/lib/mysql \
   -v "${INIT_FOLDER}":/docker-entrypoint-initdb.d \
-  mysql:8.0-oracle
+  mysql:8.0-oracle \
+  --character-set-server=utf8mb4 \
+  --collation-server=utf8mb4_unicode_ci \
+  --skip-character-set-client-handshake
 
 echo "✅ Contenedor arrancado. Esperando a que MySQL esté listo..."
 docker ps -f name=${CONTAINER_NAME}

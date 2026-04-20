@@ -2,6 +2,10 @@ services:
   # --- Base de Datos ---
   db:
     image: mysql:8.0-oracle
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
     container_name: openpunch-database
     restart: always
     environment:

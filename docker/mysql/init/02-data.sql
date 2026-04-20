@@ -1,5 +1,9 @@
+﻿-- Codificación utf8 para usar acentos
+SET NAMES 'utf8mb4';
+SET CHARACTER SET utf8mb4;
+
 -- =============================================
--- 1. INSERTAR GRUPOS
+-- 1. INSERTAR GRUPOS DE USUARIOS
 -- =============================================
 INSERT INTO `groups` (`id`, `group_name`) VALUES 
 (1, 'Desarrollo'),
