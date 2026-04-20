@@ -1,31 +1,34 @@
 services:
-    # --- Base de Datos ---
-    db:
-        image: mysql:8.0-oracle
-        container_name: openpunch-database
-        restart: always
-        environment:
-            - TZ=Europe/Madrid
-            - MYSQL_ROOT_PASSWORD=1234
-        ports:
-            - "3306:3306"
-        volumes:
-            - mysql_data:/var/lib/mysql
+  # --- Base de Datos ---
+  db:
+    image: mysql:8.0-oracle
+    container_name: openpunch-database
+    restart: always
+    environment:
+      - TZ=Europe/Madrid
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=openpunch # Obligatorio para que funcionen los scripts de init
+    ports:
+      - "3306:3306"
+    volumes:
+      # PERSISTENCIA: Bind-mount local (Ignorado en git)
+      - ./docker/mysql/data:/var/lib/mysql
+      # INICIALIZACIÓN: Scripts SQL (Dentro de git)
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
 
-    # --- Spring Boot ---
-    app:
-        build: .
-        container_name: openpunch-app
-        restart: always
-        ports:
-            - "8080:8080"
-        depends_on:
-            - db
-        environment:
-            - TZ=Europe/Madrid
-            - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/openpunch?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Europe/Madrid
-            - SPRING_DATASOURCE_USERNAME=root
-            - SPRING_DATASOURCE_PASSWORD=1234
+  # --- Spring Boot ---
+  app:
+    build: .
+    container_name: openpunch-app
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - TZ=Europe/Madrid
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/openpunch?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Europe/Madrid
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
 
-volumes:
-    mysql_data:
+# Hemos eliminado la sección 'volumes' del final porque ahora usamos carpetas locales (bind-mounts)

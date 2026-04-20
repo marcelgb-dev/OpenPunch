@@ -3,7 +3,10 @@
 # Configuración de variables
 CONTAINER_NAME="openpunch-db-test"
 DB_PASSWORD="1234"
-VOLUME_NAME="openpunch_mysql_data"
+# Ruta a los datos persistentes
+DATA_FOLDER="$(pwd)/docker/mysql/data"
+# Ruta a los scripts SQL (01-schema y 02-data)
+INIT_FOLDER="$(pwd)/docker/mysql/init"
 DB_NAME="openpunch"
 
 echo "🚀 Iniciando entorno de base de datos para OpenPunch..."
@@ -14,13 +17,20 @@ if [ "$(docker ps -aq -f name=${CONTAINER_NAME})" ]; then
     docker rm -f ${CONTAINER_NAME} > /dev/null
 fi
 
+# 2. Crear las carpetas si no existen (para evitar que Docker las cree como root)
+mkdir -p "${DATA_FOLDER}"
+mkdir -p "${INIT_FOLDER}"
+
+# 3. Arrancar el contenedor
 docker run -d \
-  --rm \
   --name ${CONTAINER_NAME} \
   -p 3306:3306 \
   -e TZ=Europe/Madrid \
   -e MYSQL_ROOT_PASSWORD=${DB_PASSWORD} \
-  -v ${VOLUME_NAME}:/var/lib/mysql \
+  -e MYSQL_DATABASE=${DB_NAME} \
+  -v "${DATA_FOLDER}":/var/lib/mysql \
+  -v "${INIT_FOLDER}":/docker-entrypoint-initdb.d \
   mysql:8.0-oracle
 
+echo "✅ Contenedor arrancado. Esperando a que MySQL esté listo..."
 docker ps -f name=${CONTAINER_NAME}
