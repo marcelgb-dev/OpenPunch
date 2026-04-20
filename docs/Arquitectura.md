@@ -5,56 +5,62 @@ Este documento detalla el diseño técnico, el stack tecnológico y las decision
 ---
 
 ## 1. Resumen del Proyecto
-OpenPunch es una solución profesional para el control de fichaje de empleados. El sistema permite registrar entradas y salidas mediante el escaneo de un código QR personal frente a una estación fija de lectura (modo Tótem).
+OpenPunch es una solución profesional para el control de fichaje de empleados. El sistema permite registrar entradas y salidas mediante el escaneo de un código QR personal frente a una estación de lectura gestionada por un usuario con rol específico.
 
 ### Funcionalidades Clave
-* **Control de Accesos por Rol:** Permisos diferenciados para `ADMIN`, `SCANNER` y `EMPLOYEE`.
-* **Sistema de Tótem (Scanner):** Un rol específico de "Scanner" gestiona una estación web que utiliza la cámara para capturar los tokens QR de los empleados.
-* **Lógica de Toggle Automático:** El sistema detecta si el escaneo corresponde a una "Entrada" o una "Salida" consultando el último registro del usuario en la base de datos.
-* **Interfaz en Inglés:** Siguiendo los requisitos académicos, toda la aplicación y documentación técnica final será en inglés.
+* **Control de Accesos por Rol:** Permisos diferenciados para `ADMIN`, `SCANNER` y `USER`.
+* **Estación de Fichaje (Scanner):** Interfaz web que utiliza la cámara para capturar los tokens QR de los empleados.
+* **Lógica de Toggle Automático:** El sistema determina si el escaneo es una "Entrada" o una "Salida" consultando en tiempo real el último registro del usuario.
+* **Interfaz en Inglés:** Toda la aplicación y documentación técnica se desarrollan en inglés por requisitos académicos.
 
 ---
 
 ## 2. Stack Tecnológico
 
 ### Backend y Lógica
-* **Lenguaje:** Java 21 con el framework **Spring Boot**.
-* **Acceso a Datos:** **JDBC Template** (SQL Puro) para mantener un control total sobre las consultas, sin usar JPA/Hibernate.
-* **Seguridad:** Spring Security basado en sesiones tradicionales (JSESSIONID).
-* **Cifrado de Contraseñas:** Uso obligatorio de **BCrypt** para todas las credenciales.
+* **Lenguaje:** Java 21 (LTS) con el framework **Spring Boot**.
+* **Acceso a Datos:** **JDBC Template** (SQL Puro). Se utilizan **Vistas SQL** para simplificar la obtención de estados complejos.
+* **Seguridad:** Spring Security basado en sesiones y cifrado **BCrypt** para credenciales.
+* **Arquitectura por capas:** Separación de clases e interfaces en:
+  - **`config`**: Configuraciones de Java / Spring.
+  - **`controller`**: Recibe peticiones del usuario, pide datos procesados a **service** y se los envía a Thymeleaf.
+  - **`model`**: Clases de datos de Java para modelar las entidades SQL.
+  - **`repository`**: Comunicación entre la base de datos y el **service**.
+  - **`service`**: Recibe peticiones de los **controllers**, pide los datos necesarios a **repository** y envía una respuesta de vuelta.
 
 ### Frontend
 * **Motor de Plantillas:** **Thymeleaf** para el renderizado desde el servidor.
-* **Estilos:** CSS estándar.
-* **Procesamiento de QR:** Librería JavaScript (como `html5-qrcode`) integrada en el frontend para la lectura de cámara, comunicándose con el backend vía Fetch API.
+* **Estilos:** CSS3 estándar.
+* **Procesamiento de QR:** Librería JavaScript integrada en el cliente para la lectura de cámara vía Fetch API.
 
 ### Infraestructura y Despliegue
-* **Base de Datos:** MySQL 8.x.
-* **Proxy Inverso:** **Nginx** encargado de gestionar el certificado SSL (HTTPS) y redirigir el tráfico a la aplicación.
-* **Contenedores:** Docker y Docker Compose (Servicios: `app`, `db`, `proxy`).
+* **Base de Datos:** MySQL 8.0 (Imagen oficial `mysql:8.0-oracle`).
+* **Proxy Inverso:** **Nginx** para la gestión de certificados SSL (HTTPS).
+* **Contenedores:** Docker y Docker Compose (Servicios: `app`, `db`, `proxy`). La aplicación se compila dentro del contenedor por el momento.
 * **Nube:** Despliegue en Amazon AWS EC2.
 
 ---
 
-## 3. Modelo de Datos (Relación de 3 Tablas)
-Para cumplir con el requerimiento de tener al menos 3 tablas relacionadas:
+## 3. Modelo de Datos
+La estructura detallada se encuentra en el script de inicialización SQL. El modelo se basa en las siguientes entidades relacionadas:
 
-1.  **`roles`**: Define los niveles de permiso (`id`, `role_name`).
-2.  **`users`**: Contiene los datos del empleado, su contraseña en BCrypt y su `qr_token` único (UUID v4). Está vinculada a la tabla `roles`.
-3.  **`attendance_logs`**: Registra cada evento de fichaje vinculado a un `user_id`, incluyendo marca de tiempo y tipo de evento.
+1.  **`groups`**: Gestión de departamentos o sedes.
+2.  **`users`**: Datos de empleados y su `qr_token` (UUID v4).
+3.  **`punch_logs`**: Registro histórico de eventos (`log_time`, `event`).
+4.  **`work_sessions`**: Registro de jornadas completas calculadas.
+
+* **`view_user_status`**: Vista SQL que identifica el estado actual de cada usuario para la lógica de toggle.
 
 ---
 
 ## 4. Seguridad y Red (Diseño DMZ)
-El despliegue sigue un esquema profesional de seguridad perimetral:
-
-* **Zona Pública (DMZ):** Solo el contenedor de **Nginx** está expuesto al exterior por los puertos 80 y 443.
-* **Red Privada:** Los contenedores de Spring Boot y MySQL están en una red interna de Docker, aislados del acceso directo desde internet.
-* **Uso de HTTPS:** El certificado SSL es obligatorio para que el navegador permita el acceso a la cámara del dispositivo de escaneo.
+* **Aislamiento:** Los contenedores de la App y la DB operan en una red interna privada de Docker.
+* **HTTPS:** Obligatorio para habilitar el uso de la cámara en el navegador del Scanner. Se estudiará el uso de CertBot + DuckDNS.
 
 ---
 
-## 5. Automatización y Configuración
-* **Variables de Entorno:** Gestión de datos sensibles mediante archivos `.env` (fuera de Git).
-* **Script de Setup:** Un archivo `setup.sh` automatiza la creación del entorno y la verificación de dependencias.
-* **Inicialización:** El esquema de la BD y el administrador inicial se cargan automáticamente vía `docker/mysql/init.sql`.
+## 5. Automatización
+* **Variables de Entorno:** Uso de archivos `.env` para datos sensibles.
+* **Script de Setup:** Automatización de la creación del entorno y verificación de dependencias.
+* **Contenedor de testeo de la DB:** Script start-testdb.sh arranca un contenedor Docker mysql para hacer pruebas sin docker-compose.
+* **Inicialización:** Carga automática de esquema y datos maestros desde la carpeta de inicialización de MySQL (docker/mysql/init)
