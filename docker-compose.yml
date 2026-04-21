@@ -34,5 +34,3 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/openpunch?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Europe/Madrid
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
-
-# Hemos eliminado la sección 'volumes' del final porque ahora usamos carpetas locales (bind-mounts)
