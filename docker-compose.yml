@@ -13,7 +13,7 @@ services:
       - MYSQL_ROOT_PASSWORD=1234
       - MYSQL_DATABASE=openpunch # Obligatorio para que funcionen los scripts de init
     networks:
-      - db-connection
+      - backend-private
     volumes:
       # PERSISTENCIA: Bind-mount local (Ignorado en git)
       - ./docker/mysql/data:/var/lib/mysql
@@ -36,8 +36,12 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
     networks:
-      - db-connection
+      - frontend-public
+      - backend-private
 
 networks:
-  db-connection:
+  frontend-public:
+    driver: bridge
+  backend-private:
     internal: true
+    
