@@ -5,7 +5,7 @@ SET CHARACTER SET utf8mb4;
 -- =============================================
 -- 1. INSERTAR GRUPOS DE USUARIOS
 -- =============================================
-INSERT INTO `groups` (`id`, `group_name`) VALUES 
+INSERT INTO `groups` (`id`, `group_name`) VALUES
 (1, 'Desarrollo'),
 (2, 'Administración');
 
@@ -13,7 +13,7 @@ INSERT INTO `groups` (`id`, `group_name`) VALUES
 -- 2. INSERTAR USUARIOS (5 Usuarios)
 -- Usamos UUID() para simular lo que haría Java
 -- =============================================
-INSERT INTO `users` (`id`, `group_id`, `qr_token`, `username`, `password`, `role`, `name`, `surname`) VALUES 
+INSERT INTO `users` (`id`, `group_id`, `qr_token`, `username`, `password`, `role`, `name`, `surname`) VALUES
 (1, 1, UUID(), 'admin', 'admin_hash', 1, 'Andrés', 'García'),       -- Admin en Desarrollo
 (2, 1, UUID(), 'marta.dev', 'pass123', 2, 'Marta', 'López'),      -- Usuario en Desarrollo
 (3, 1, UUID(), 'lucas.dev', 'pass123', 2, 'Lucas', 'Ruiz'),       -- Usuario en Desarrollo
@@ -64,3 +64,11 @@ VALUES (3, 3, 4, '2026-04-19 09:00:00', '2026-04-19 18:00:00', 540);
 -- Sesión de Elena (6h = 360 min)
 INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `end_log_id`, `start_time`, `end_time`, `duration_minutes`)
 VALUES (4, 5, 6, '2026-04-20 07:30:00', '2026-04-20 13:30:00', 360);
+
+-- Sesión de Andrés (abierta)
+INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `start_time`)
+VALUES (1, 8,  '2026-04-20 10:00:00');
+
+-- Sesión de Pablo (abierta)
+INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `start_time`)
+VALUES (5, 7,  '2026-04-20 09:00:00');

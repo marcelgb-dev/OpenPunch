@@ -46,7 +46,7 @@ CREATE TABLE `work_sessions` (
   CONSTRAINT `fk_session_end` FOREIGN KEY (`end_log_id`) REFERENCES `punch_logs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
------------------------------------------------- VIEWS ------------------------------------------------
+--  VIEWS
 -- user_status: Users (minus login credentials) + last Log
 CREATE VIEW view_user_status AS
 SELECT
