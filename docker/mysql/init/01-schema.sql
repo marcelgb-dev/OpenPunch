@@ -21,7 +21,7 @@ CREATE TABLE `users` (
   CONSTRAINT `fk_user_group` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 3. Logs de fichaje (La "Caja Negra")
+-- 3. Logs de fichaje
 CREATE TABLE `punch_logs` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `punch_logs` (
   CONSTRAINT `fk_punch_logs_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 4. Sesiones de trabajo (La tabla para cálculos rápidos)
+-- 4. Sesiones de trabajo
 CREATE TABLE `work_sessions` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
@@ -46,19 +46,18 @@ CREATE TABLE `work_sessions` (
   CONSTRAINT `fk_session_end` FOREIGN KEY (`end_log_id`) REFERENCES `punch_logs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE OR REPLACE VIEW view_user_status AS
+-- 5. VIEW: Users (minus login credentials) + last log
+CREATE VIEW view_user_status AS
 SELECT
-    u.*,
+    u.id AS user_id,
+    u.group_id,
+    u.qr_token,
+    u.name,
+    u.surname,
+    u.role,
     l.id AS last_log_id,
-    l.log_time AS last_log_time,
-    l.event
-FROM
-    users u
-        LEFT JOIN
-    punch_logs l ON l.id = (
-        SELECT id
-        FROM punch_logs
-        WHERE user_id = u.id
-        ORDER BY log_time DESC, id DESC
-    LIMIT 1
-    );
+    l.log_time as last_log_time,
+    l.event as last_log_event
+FROM users u LEFT JOIN punch_logs l ON l.id = (
+    SELECT MAX(id) FROM punch_logs WHERE user_id = u.id
+);
