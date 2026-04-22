@@ -84,23 +84,18 @@ public class JdbcWorkSessionRepository implements WorkSessionRepository {
         return returnOptional(results);
     }
 
-    // Creates a new work session in the DB
+    // Opens a work session in the DB
     @Override
-    public void save(WorkSession ws) {
+    public void openSession(Integer userId, Integer startLogId, LocalDateTime startTime) {
         String sql = """
                     INSERT INTO work_sessions 
-                    (user_id, start_log_id, end_log_id, start_time, end_time, duration_minutes) 
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    (user_id, start_log_id, start_time) 
+                    VALUES (?, ?, ?)
                     """;
-        jdbc.update(
-                sql, ws.getUserId(),
-                ws.getStartLogId(),
-                ws.getEndLogId(),
-                ws.getStartTime(),
-                ws.getEndTime(),
-                ws.getDurationMinutes());
+        jdbc.update(sql, userId, startLogId, startTime);
     }
 
+    // Closes a work session in the DB
     @Override
     public void closeSession(Integer workSessionId, Integer endLogId, LocalDateTime endTime, Integer durationMinutes) {
         String sql = """

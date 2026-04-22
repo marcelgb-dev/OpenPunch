@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class JdbcLogRepository implements PunchLogRepository {
+public class JdbcPunchLogRepository implements PunchLogRepository {
 
     private final JdbcTemplate jdbc;
 
@@ -39,7 +39,7 @@ public class JdbcLogRepository implements PunchLogRepository {
     };
 
     // Constructor
-    public JdbcLogRepository(JdbcTemplate jdbc) {
+    public JdbcPunchLogRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
@@ -61,6 +61,16 @@ public class JdbcLogRepository implements PunchLogRepository {
                     """;
 
         return jdbc.query(sql, logViewRowMapper, userId);
+    }
+
+    public List<PunchLog> findNumberByUser(Integer userId, int numberOfLogs) {
+        String sql = """
+            SELECT * FROM view_punch_logs 
+            WHERE user_id = ? 
+            ORDER BY log_time DESC 
+            LIMIT ?
+            """;
+        return jdbc.query(sql, logViewRowMapper, userId, numberOfLogs);
     }
 
     // Creates a new log in the DB

@@ -13,6 +13,6 @@ public interface WorkSessionRepository extends BaseRepository {
 
     Optional<WorkSession> findOpenSession(Integer userId);
 
-    void save(WorkSession workSession);
+    void openSession(Integer userId, Integer startLogId, LocalDateTime startTime);
     void closeSession(Integer workSessionId, Integer endLogId, LocalDateTime endTime, Integer durationMinutes);
 }

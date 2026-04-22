@@ -28,10 +28,10 @@ public class WorkSession {
 
     // Returns the duration in minutes based on startTime and endTime
     public int calculateDuration() {
-        if (startTime == null || endTime == null)
+        if (this.startTime == null || this.endTime == null)
             return 0;
 
-        return (int) java.time.Duration.between(startTime, endTime).toMinutes();
+        return (int) Duration.between(this.startTime, this.endTime).toMinutes();
     }
 
     public Integer getId() {
