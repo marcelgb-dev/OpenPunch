@@ -12,6 +12,7 @@ public interface UserRepository extends BaseRepository {
 
     Optional<User> findById(Integer id);
     Optional<User> findByToken(String token);
+    Optional<User> findByUsername(String username);
 
     void save(User user);
 

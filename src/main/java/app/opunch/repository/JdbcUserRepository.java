@@ -15,34 +15,42 @@ public class JdbcUserRepository implements UserRepository {
 
     private final JdbcTemplate jdbc;
 
-    // Plantilla de RowMapper para obtener los datos de un usuario y sus logs asociados
-    private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
+    // RowMapper template to use with the "User Status View" queries
+    private final RowMapper<User> userStatusRowMapper = (rs, rowNum) -> {
 
-        // Crea el objeto usuario y guarda sus datos
+        // Create the User object and its data
         User u = new User();
-        u.setId(rs.getInt("id"));
+        u.setId(rs.getInt("user_id"));
         u.setGroupId(rs.getInt("group_id"));
         u.setQrToken(rs.getString("qr_token"));
-        u.setUsername(rs.getString("username"));
-        u.setPassword(rs.getString("password"));
-        u.setRole(rs.getInt("role"));
         u.setName(rs.getString("name"));
         u.setSurname(rs.getString("surname"));
+        u.setRole(rs.getInt("role"));
+        int lastLogId = rs.getInt("last_log_id");
 
-        int lastLogId = rs.getInt("last_id");
-
-        // Si existe algún log para este usuario, coge sus datos y guárdalos en el objeto usuario
+        // If there's an last log for the user, extract its data and save it as a PunchLog object
         if (lastLogId > 0) {
             PunchLog l = new PunchLog();
             l.setId(lastLogId);
-            l.setUserId(rs.getInt("id"));
+            l.setUserId(rs.getInt("user_id"));
             l.setLogTime(rs.getTimestamp("last_log_time").toLocalDateTime());
-            l.setEvent(rs.getString("last_event"));
+            l.setEvent(rs.getString("last_log_event"));
 
             u.setLastLog(l);
         }
 
-        // Devuelve el objeto usuario
+        // Returns the User object
+        return u;
+    };
+
+    private final RowMapper<User> loginRowMapper = (rs, rowNum) -> {
+        User u = new User();
+
+        u.setId(rs.getInt("id"));
+        u.setUsername(rs.getString("username"));
+        u.setPassword(rs.getString("password"));
+        u.setRole(rs.getInt("role"));
+
         return u;
     };
 
@@ -51,112 +59,67 @@ public class JdbcUserRepository implements UserRepository {
         this.jdbc = jdbc;
     }
 
-    // Selecciona los datos de todos los usuarios y sus logs asociados
+    // Select the status data and last log from all users
     @Override
     public List<User> findAll() {
-        String sql =
-                "SELECT" +
-                    " u.*," +
-                    " pl.id as last_id," +
-                    " pl.log_time as last_log_time," +
-                    " pl.event as last_event" +
-                " FROM users u" +
-                " LEFT JOIN punch_logs pl ON pl.id = (" +
-                    " SELECT id FROM punch_logs " +
-                    " WHERE user_id = u.id" +
-                    "  ORDER BY log_time DESC" +
-                    " LIMIT 1)";
-
-        return jdbc.query(sql, userRowMapper);
+        String sql = "SELECT * FROM view_user_status";
+        return jdbc.query(sql, userStatusRowMapper);
     }
 
-    // Selecciona los datos de todos los usuarios activos y sus logs asociados
+    // Select the status data and last log from all active users
     @Override
     public List<User> findAllActive() {
-        String sql =
-                "SELECT" +
-                    " u.*," +
-                    " pl.id as last_id," +
-                    " pl.log_time as last_log_time," +
-                    " pl.event as last_event" +
-                " FROM users u" +
-                " INNER JOIN punch_logs pl ON pl.id = (" +
-                    " SELECT id FROM punch_logs" +
-                    " WHERE user_id = u.id" +
-                    " ORDER BY log_time DESC LIMIT 1)" +
-                " WHERE pl.event = 'IN'";
+        String sql = "SELECT * FROM view_user_status WHERE last_log_event = 'IN'";
 
-        return jdbc.query(sql, userRowMapper);
+        return jdbc.query(sql, userStatusRowMapper);
     }
 
-    // Selecciona los datos de todos los usuarios de un grupo y sus logs asociados
+    // Select the status data and last log from all users belonging to a specific group
     @Override
     public List<User> findAllByGroup(Integer groupId) {
-        String sql =
-                "SELECT" +
-                    " u.*, " +
-                    " pl.id as last_id," +
-                    " pl.log_time as last_log_time," +
-                    " pl.event as last_event" +
-                " FROM users u" +
-                " LEFT JOIN punch_logs pl ON pl.id = (" +
-                    " SELECT id FROM punch_logs " +
-                    " WHERE user_id = u.id" +
-                    "  ORDER BY log_time DESC" +
-                    " LIMIT 1)" +
-                " WHERE u.group_id = ?";
+        String sql = "SELECT * FROM view_user_status WHERE group_id = ?";
 
-        return jdbc.query(sql, userRowMapper, groupId);
+        return jdbc.query(sql, userStatusRowMapper, groupId);
     }
 
-    // Selecciona los datos de un usuario por id y sus logs asociados
+    // Select the status data and last log from a specific user by their id
     @Override
     public Optional<User> findById(Integer id) {
-        String sql =
-                "SELECT" +
-                    " u.*, " +
-                    " pl.id as last_id," +
-                    " pl.log_time as last_log_time," +
-                    " pl.event as last_event" +
-                " FROM users u" +
-                " LEFT JOIN punch_logs pl ON pl.id = (" +
-                    " SELECT id FROM punch_logs " +
-                    " WHERE user_id = u.id" +
-                    " ORDER BY log_time DESC" +
-                    " LIMIT 1)" +
-                " WHERE u.id = ?";
+        String sql = "SELECT * FROM view_user_status WHERE user_id = ?";
 
-        List<User> results = jdbc.query(sql, userRowMapper, id);
+        List<User> results = jdbc.query(sql, userStatusRowMapper, id);
 
         return returnOptional(results);
     }
 
-    // Selecciona los datos de un usuario por qr_token y sus logs asociados
+    // Select the status data and last log from a specific user by their qr_token
     @Override
     public Optional<User> findByToken(String token) {
-        String sql =
-                "SELECT" +
-                    " u.*, " +
-                    " pl.id as last_id," +
-                    " pl.log_time as last_log_time," +
-                    " pl.event as last_event" +
-                " FROM users u" +
-                " LEFT JOIN punch_logs pl ON pl.id = (" +
-                    " SELECT id FROM punch_logs " +
-                    " WHERE user_id = u.id" +
-                    " ORDER BY log_time DESC" +
-                    " LIMIT 1)" +
-                " WHERE u.qr_token = ?";
+        String sql = "SELECT * FROM view_user_status WHERE qr_token = ?";
 
-        List<User> results = jdbc.query(sql, userRowMapper, token);
+        List<User> results = jdbc.query(sql, userStatusRowMapper, token);
 
         return returnOptional(results);
     }
 
-    // Crea un nuevo usuario en la BD
+    // Select the login data from a specific user by their username
+    @Override
+    public Optional<User> findByUsername(String username) {
+        String sql = "SELECT id, username, password, role FROM users WHERE username = ?";
+
+        List<User> results = jdbc.query(sql, loginRowMapper, username);
+
+        return returnOptional(results);
+    }
+
+    // Create a new user in the DB
     @Override
     public void save(User user) {
-        String sql = "INSERT INTO users (group_id, qr_token, username, password, role, name, surname) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = """
+                    INSERT INTO users 
+                    (group_id, qr_token, username, password, role, name, surname) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """;
         jdbc.update(sql,
                 user.getGroupId(),
                 user.getQrToken(),
