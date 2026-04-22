@@ -16,7 +16,7 @@ public class JdbcUserRepository implements UserRepository {
     private final JdbcTemplate jdbc;
 
     // RowMapper template to use with the "User Status View" queries
-    private final RowMapper<User> userStatusRowMapper = (rs, rowNum) -> {
+    private final RowMapper<User> userStatusViewRowMapper = (rs, rowNum) -> {
 
         // Create the User object and its data
         User u = new User();
@@ -63,7 +63,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public List<User> findAll() {
         String sql = "SELECT * FROM view_user_status";
-        return jdbc.query(sql, userStatusRowMapper);
+        return jdbc.query(sql, userStatusViewRowMapper);
     }
 
     // Select the status data and last log from all active users
@@ -71,7 +71,7 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> findAllActive() {
         String sql = "SELECT * FROM view_user_status WHERE last_log_event = 'IN'";
 
-        return jdbc.query(sql, userStatusRowMapper);
+        return jdbc.query(sql, userStatusViewRowMapper);
     }
 
     // Select the status data and last log from all users belonging to a specific group
@@ -79,7 +79,7 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> findAllByGroup(Integer groupId) {
         String sql = "SELECT * FROM view_user_status WHERE group_id = ?";
 
-        return jdbc.query(sql, userStatusRowMapper, groupId);
+        return jdbc.query(sql, userStatusViewRowMapper, groupId);
     }
 
     // Select the status data and last log from a specific user by their id
@@ -87,7 +87,7 @@ public class JdbcUserRepository implements UserRepository {
     public Optional<User> findById(Integer id) {
         String sql = "SELECT * FROM view_user_status WHERE user_id = ?";
 
-        List<User> results = jdbc.query(sql, userStatusRowMapper, id);
+        List<User> results = jdbc.query(sql, userStatusViewRowMapper, id);
 
         return returnOptional(results);
     }
@@ -97,7 +97,7 @@ public class JdbcUserRepository implements UserRepository {
     public Optional<User> findByToken(String token) {
         String sql = "SELECT * FROM view_user_status WHERE qr_token = ?";
 
-        List<User> results = jdbc.query(sql, userStatusRowMapper, token);
+        List<User> results = jdbc.query(sql, userStatusViewRowMapper, token);
 
         return returnOptional(results);
     }
