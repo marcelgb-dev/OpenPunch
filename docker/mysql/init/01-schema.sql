@@ -75,3 +75,17 @@ SELECT
     u.surname,
     u.role
 FROM punch_logs l JOIN users u ON l.user_id = u.id;
+
+-- WorkSessions + basic data from their Users
+CREATE VIEW view_work_sessions AS
+SELECT
+    w.id AS work_session_id,
+    w.user_id,
+    w.start_time,
+    w.end_time,
+    w.duration_minutes,
+    u.group_id,
+    u.name,
+    u.surname,
+    u.role
+FROM work_sessions w JOIN users u ON w.user_id = u.id;
