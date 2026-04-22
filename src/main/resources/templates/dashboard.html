@@ -3,36 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>OpenPunch | Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div class="container">
-        <h1>Registros de Presencia</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Acción</th>
-                    <th>Fecha y Hora</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="log : ${logs}">
-                    <td th:text="${log.user.name + ' ' + log.user.surname}">Nombre Apellido</td>
-                    <td>
+<div class="container">
+    <header>
+        <h1>Log History</h1>
+        <a href="/users" class="btn btn-outline">See Users</a>
+    </header>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Usuario</th>
+            <th class="cell-center">Acción</th>
+            <th>Fecha y Hora</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="log : ${logs}">
+            <td style="font-weight: 600;" th:text="${log.user.name + ' ' + log.user.surname}">Nombre Apellido</td>
+            <td class="cell-center">
                         <span th:text="${log.event}"
-                              th:class="${log.event == 'IN' ? 'badge in' : 'badge out'}">
+                              th:class="${log.event == 'IN' ? 'status status-in' : 'status status-out'}">
                             IN
                         </span>
-                    </td>
+            </td>
 
-                    <td class="timestamp"
-                        th:text="${#temporals.format(log.logTime, 'dd/MM/yyyy HH:mm:ss')}">
-                        17/04/2026 19:00
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            <td class="timestamp"
+                th:text="${#temporals.format(log.logTime, 'dd/MM/yyyy HH:mm:ss')}">
+                17/04/2026 19:00
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

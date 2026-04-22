@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Openpunch - User Panel</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>User List</h1>
+        <a href="/" class="btn btn-outline">See Log History</a>
+        <a href="/users/new" class="btn btn-primary">+ Add User</a>
+    </header>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Last Punch</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}">1</td>
+            <td style="font-weight: 600;" th:text="${user.name}">Nombre</td>
+
+            <td>
+                    <span th:if="${user.lastLog != null}"
+                          th:text="${user.lastLog.event}"
+                          th:classappend="${user.lastLog.event == 'IN'} ? 'status status-in' : 'status status-out'">
+                    </span>
+                <span th:unless="${user.lastLog != null}" class="timestamp">---</span>
+            </td>
+
+            <td class="timestamp" th:text="${user.lastLog != null} ? ${#temporals.format(user.lastLog.logTime, 'dd/MM/yyyy HH:mm')} : '---'">
+            </td>
+
+            <td>
+                <a th:href="@{/users/profile/{id}(id=${user.id})}" class="btn btn-outline">Profile</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
