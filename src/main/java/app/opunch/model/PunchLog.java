@@ -11,10 +11,10 @@ public class PunchLog {
 
     private User user;
 
-    // Constructor vacío
+    // Empty constructor
     public PunchLog() {};
 
-    // Constructor principal
+    // Main constructor
     public PunchLog(Integer id, Integer userId, LocalDateTime logTime, String event) {
         this.id = id;
         this.userId = userId;
@@ -22,7 +22,7 @@ public class PunchLog {
         this.event = event;
     }
 
-    // Constructor sobrecargado con User
+    // Overloaded constructor with User
     public PunchLog(Integer id, Integer userId, LocalDateTime logTime, String event, User user) {
         this.id = id;
         this.userId = userId;
@@ -31,7 +31,7 @@ public class PunchLog {
         this.user = user;
     }
 
-    // Getters y Setters
+    // Getters and Setters
     public Integer getId() {
         return id;
     }
