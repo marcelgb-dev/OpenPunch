@@ -12,8 +12,8 @@ services:
       - TZ=Europe/Madrid
       - MYSQL_ROOT_PASSWORD=1234
       - MYSQL_DATABASE=openpunch # Obligatorio para que funcionen los scripts de init
-    ports:
-      - "3306:3306"
+    networks:
+      - db-connection
     volumes:
       # PERSISTENCIA: Bind-mount local (Ignorado en git)
       - ./docker/mysql/data:/var/lib/mysql
@@ -34,3 +34,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/openpunch?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Europe/Madrid
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
+    networks:
+      - db-connection
+
+networks:
+  db-connection:
+    internal: true
