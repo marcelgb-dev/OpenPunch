@@ -8,24 +8,23 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class JdbcLogRepository implements PunchLogRepository {
 
     private final JdbcTemplate jdbc;
 
-    // Plantilla de RowMapper para usar en las queries.
-    private final RowMapper<PunchLog> logRowMapper = (rs, rowNum) -> {
+    // RowMapper template for the view_punch_logs SQL view
+    private final RowMapper<PunchLog> logViewRowMapper = (rs, rowNum) -> {
 
-        // Crea un objeto PunchLog y le asigna sus campos
+        // Creates a PunchLog object and fills the data
         PunchLog pl = new PunchLog();
         pl.setId(rs.getInt("log_id"));
         pl.setUserId(rs.getInt("user_id"));
         pl.setLogTime(rs.getTimestamp("log_time").toLocalDateTime());
         pl.setEvent(rs.getString("event"));
 
-        // Crea un objeto User enlazado a los datos del usuario del log y le asigna los campos básicos
+        // Creates a User object with basic data to display paired with the log
         User user = new User();
         user.setId(rs.getInt("user_id"));
         user.setGroupId(rs.getInt("group_id"));
@@ -33,10 +32,9 @@ public class JdbcLogRepository implements PunchLogRepository {
         user.setName(rs.getString("name"));
         user.setSurname(rs.getString("surname"));
 
-        // Guarda el usuario en el objeto del log
+        // Saves the User object in the PunchLog object
         pl.setUser(user);
-
-        // Devuelve el log
+        // Returns the PunchLog object
         return pl;
     };
 
@@ -45,34 +43,27 @@ public class JdbcLogRepository implements PunchLogRepository {
         this.jdbc = jdbc;
     }
 
-    // Selecciona todos los logs y de cada log los campos básicos de su usuario correspondiente
+    // Selects all logs + basic information from their users
     @Override
     public List<PunchLog> findAll() {
-        String sql =
-                "SELECT l.id as log_id, l.event, l.log_time," + // Campos del log
-                " u.id as user_id, u.group_id, u.role, u.name, u.surname" + // Campos del usuario
-                " FROM punch_logs l " +
-                " JOIN users u ON l.user_id = u.id" +
-                " ORDER BY l.log_time DESC";
+        String sql = "SELECT * FROM view_punch_logs ORDER BY log_time DESC";
 
-        return jdbc.query(sql, logRowMapper);
+        return jdbc.query(sql, logViewRowMapper);
     }
 
-    // Selecciona todos los logs de un usuario y de cada log los campos básicos del usuario
+    // Selects all logs + basic information from a specific user by user_id
     @Override
     public List<PunchLog> findAllByUser(Integer userId) {
-        String sql =
-            "SELECT l.id as log_id, l.event, l.log_time," +
-            " u.id as user_id, u.group_id, u.role, u.name, u.surname" +
-            " FROM punch_logs l " +
-            " JOIN users u ON l.user_id = u.id" +
-            " WHERE l.user_id = ?" +
-            " ORDER BY l.log_time DESC";
+        String sql = """
+                    SELECT * FROM view_punch_logs 
+                    WHERE user_id = ? 
+                    ORDER BY log_time DESC
+                    """;
 
-        return jdbc.query(sql, logRowMapper, userId);
+        return jdbc.query(sql, logViewRowMapper, userId);
     }
 
-    // Crea un nuevo log en la BD
+    // Creates a new log in the DB
     @Override
     public void save(PunchLog log) {
         String sql = "INSERT INTO punch_logs (user_id, event) VALUES (?, ?)";
