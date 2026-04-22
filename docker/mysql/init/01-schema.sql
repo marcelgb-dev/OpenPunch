@@ -46,7 +46,8 @@ CREATE TABLE `work_sessions` (
   CONSTRAINT `fk_session_end` FOREIGN KEY (`end_log_id`) REFERENCES `punch_logs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 5. VIEW: Users (minus login credentials) + last log
+------------------------------------------------ VIEWS ------------------------------------------------
+-- user_status: Users (minus login credentials) + last Log
 CREATE VIEW view_user_status AS
 SELECT
     u.id AS user_id,
@@ -61,3 +62,16 @@ SELECT
 FROM users u LEFT JOIN punch_logs l ON l.id = (
     SELECT MAX(id) FROM punch_logs WHERE user_id = u.id
 );
+
+-- Logs + basic data from their Users
+CREATE VIEW view_punch_logs AS
+SELECT
+    l.id AS log_id,
+    l.user_id,
+    l.log_time,
+    l.event,
+    u.group_id,
+    u.name,
+    u.surname,
+    u.role
+FROM punch_logs l JOIN users u ON l.user_id = u.id;
