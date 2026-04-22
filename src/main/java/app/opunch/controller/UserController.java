@@ -1,25 +1,42 @@
 package app.opunch.controller;
 
+import app.opunch.model.PunchLog;
 import app.opunch.model.User;
+import app.opunch.service.PunchService;
 import app.opunch.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class UserController {
     private final UserService userService;
+    private final PunchService punchService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PunchService punchService) {
         this.userService = userService;
+        this.punchService = punchService;
     }
 
     @GetMapping("/users")
     public String showUsers(Model model) {
         model.addAttribute("users", userService.getUserStatusView());
         return "userlist";
+    }
+
+    // /users/id
+    @GetMapping("/users/profile/{userId}")
+    public String showProfile(@PathVariable Integer userId, Model model) {
+
+        User user = userService.getUser(userId);
+        model.addAttribute("user", user);
+
+        List<PunchLog> userLogs = punchService.getAllFromUser(userId);
+        model.addAttribute("logs", userLogs);
+
+        return "profile";
     }
 
     @GetMapping("/users/new")

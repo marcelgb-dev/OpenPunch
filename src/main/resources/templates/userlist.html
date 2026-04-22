@@ -10,10 +10,23 @@
 <div class="container">
     <header>
         <h1>User List</h1>
-        <a href="/" class="btn btn-outline">See Log History</a>
-        <a href="/users/new" class="btn btn-primary">+ Add User</a>
-    </header>
+        <div class="header-actions">
+            <a href="/" class="btn btn-outline">See Log History</a>
+            <a href="/users/new" class="btn btn-primary">+ Add User</a>
+        </div>
 
+    </header>
+    <div class="alert-container">
+        <div th:if="${success}" class="alert alert-success" id="alert-ok">
+            <span th:text="${success}"></span>
+            <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger" id="alert-err">
+            <span th:text="${error}"></span>
+            <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
+    </div>
     <table>
         <thead>
         <tr>
@@ -27,8 +40,7 @@
         <tbody>
         <tr th:each="user : ${users}">
             <td th:text="${user.id}">1</td>
-            <td style="font-weight: 600;" th:text="${user.name}">Nombre</td>
-
+            <td style="font-weight: 600;" th:text="${user.name + ' ' + user.surname}">Nombre y Apellido</td>
             <td>
                     <span th:if="${user.lastLog != null}"
                           th:text="${user.lastLog.event}"
@@ -41,7 +53,18 @@
             </td>
 
             <td>
-                <a th:href="@{/users/profile/{id}(id=${user.id})}" class="btn btn-outline">Profile</a>
+                <div style="display: flex; gap: 8px;">
+                    <a th:href="@{/punch(token=${user.qrToken})}"
+                       class="btn btn-primary"
+                       style="background-color: #27ae60; border: none;">
+                        Punch
+                    </a>
+
+                    <a th:href="@{/users/profile/{id}(id=${user.id})}"
+                       class="btn btn-outline">
+                        Profile
+                    </a>
+                </div>
             </td>
         </tr>
         </tbody>

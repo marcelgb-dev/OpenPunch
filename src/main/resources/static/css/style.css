@@ -25,6 +25,12 @@ header {
     margin-bottom: 25px;
 }
 
+.header-actions {
+    display: flex;
+    gap: 12px; /* Espacio entre los dos botones */
+    align-items: center;
+}
+
 h1 {
     color: #2c3e50;
     margin: 0;
@@ -150,4 +156,61 @@ tr:hover {
     border-color: #3498db;
     outline: none;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Contenedor para las alertas */
+.alert-container {
+    width: 90%;
+    max-width: 1000px; /* Alineado con el ancho de tu tarjeta de lista */
+    margin: 10px auto;
+}
+
+/* Estilo base de la alerta */
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-family: sans-serif;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Éxito: Verde (Como tus botones de Punch) */
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-left: 5px solid #28a745; /* El verde de tus botones */
+}
+
+/* Error: Rojo */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-left: 5px solid #dc3545;
+}
+
+/* Botón de cerrar manual */
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.5;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
+/* Animación */
+@keyframes slideIn {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

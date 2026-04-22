@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile - OpenPunch</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1 th:text="${user.name} + ' ' + ${user.surname}">User Name</h1>
+        <div class="header-actions">
+            <a href="/users" class="btn btn-outline">Back to List</a>
+        </div>
+    </header>
+
+    <div style="display: flex; gap: 40px; align-items: flex-start; margin-bottom: 40px;">
+
+        <div style="flex: 1;">
+            <div class="form-group">
+                <label>System Role</label>
+                <div style="margin-top: 5px;">
+                        <span class="status"
+                              th:style="${user.role == 1} ? 'background:#ebedff; color:#34495e;' : ''"
+                              th:classappend="${user.role == 2} ? 'status-in' : (${user.role == 3} ? 'status-out' : '')"
+                              th:text="${user.role == 1} ? 'ADMIN' : (${user.role == 2} ? 'USER' : 'SCANNER')">
+                        </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Current Status</label>
+                <div style="margin-top: 5px; display: flex; align-items: center; gap: 15px;">
+                    <span th:class="${user.active} ? 'status status-in' : 'status status-out'"
+                          th:text="${user.active} ? 'ACTIVE' : 'INACTIVE'">
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Personal Token (Internal)</label>
+                <code style="display: block; background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #eee; font-size: 0.85rem; color: #666; margin-top: 5px;"
+                      th:text="${user.qrToken}">
+                    uuid-token-placeholder
+                </code>
+            </div>
+            <a th:href="@{/punch(token=${user.qrToken})}"
+               class="btn btn-primary"
+               style="background-color: #27ae60; border: none;">
+                Punch
+            </a>
+            <div class="alert-container">
+                <div th:if="${success}" class="alert alert-success">
+                    <span th:text="${success}"></span>
+                    <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+                <div th:if="${error}" class="alert alert-danger">
+                    <span th:text="${error}"></span>
+                    <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="flex: 0 0 250px; text-align: center; padding: 25px; border: 1px solid #f0f2f5; border-radius: 12px; background: #fafafa;">
+            <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #2c3e50;">Your QR Access</label>
+
+            <div id="qr-container" style="width: 180px; height: 180px; background: white; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                <span style="color: #adb5bd; font-size: 0.75rem; padding: 10px;">QR Generator Ready</span>
+            </div>
+
+            <p style="font-size: 0.7rem; color: #95a5a6; margin-top: 15px; line-height: 1.4;">
+                Scan this code at the terminal to register your entry or exit.
+            </p>
+        </div>
+    </div>
+
+    <div class="logs-section">
+        <h3 style="color: #2c3e50; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 20px;">
+            Recent Activity Logs
+        </h3>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Event</th>
+                <th>Date & Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log : ${logs}">
+                <td th:text="${log.id}">1</td>
+                <td>
+                            <span th:class="${log.event == 'IN'} ? 'status status-in' : 'status status-out'"
+                                  th:text="${log.event}">
+                                IN
+                            </span>
+                </td>
+                <td class="timestamp" th:text="${#temporals.format(log.logTime, 'dd/MM/yyyy HH:mm:ss')}">
+                    20/04/2026 10:00:00
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(logs)}">
+                <td colspan="3" style="text-align: center; color: #95a5a6; padding: 30px;">
+                    No activity recorded for this user yet.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

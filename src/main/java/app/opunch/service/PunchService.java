@@ -69,15 +69,18 @@ public class PunchService {
     }
 
     private void openWorkSession (PunchLog startLog) {
+        System.out.println("Method openWorkSession - Log ID:" + startLog.getId());
         wsRepo.openSession(startLog.getUserId(), startLog.getId(), startLog.getLogTime());
     }
 
     private void closeWorkSession (PunchLog endLog) throws RuntimeException {
-
+        System.out.println("Method closeWorkSession - Log ID:" + endLog.getId());
         Optional <WorkSession> optionalWs = wsRepo.findOpenSession(endLog.getUserId());
 
-        if (optionalWs.isEmpty())
-            throw new RuntimeException("PunchService.closeWorkSession didn't find an open session");
+        if (optionalWs.isEmpty()) {
+            System.err.println("WARNING: PunchService.closeWorkSession didn't find an open session for user " + endLog.getUserId());
+            return;
+        }
 
         WorkSession ws = optionalWs.get();
         ws.setEndTime(endLog.getLogTime());
@@ -89,5 +92,10 @@ public class PunchService {
     // Obtén todos los logs
     public List<PunchLog> getAllLogs() {
         return logRepo.findAll();
+    }
+
+    // Obtén todos los logs de un user
+    public List<PunchLog> getAllFromUser(Integer userId) {
+        return logRepo.findAllByUser(userId);
     }
 }
