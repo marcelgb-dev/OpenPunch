@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Configuración de variables
-IMAGE_NAME="openpunch-app"
-CONTAINER_NAME="openpunch-container"
+IMAGE_NAME="openpunch-image-test"
+CONTAINER_NAME="openpunch-app-test"
 NETWORK_NAME="openpunch-test-network"
 
 echo "🚀 Starting OpenPunch deployment process..."
