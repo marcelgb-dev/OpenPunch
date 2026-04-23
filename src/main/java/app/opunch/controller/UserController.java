@@ -51,7 +51,6 @@ public class UserController {
     @PostMapping("/users/save")
     public String saveUser(@ModelAttribute("user") User user) {
 
-        user.setQrToken(java.util.UUID.randomUUID().toString());
         // 2. Guardamos en la base de datos
         userService.save(user);
 
