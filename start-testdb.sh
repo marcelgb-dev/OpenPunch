@@ -8,8 +8,15 @@ DATA_FOLDER="$(pwd)/docker/mysql/data"
 # Ruta a los scripts SQL (01-schema y 02-data)
 INIT_FOLDER="$(pwd)/docker/mysql/init"
 DB_NAME="openpunch"
+NETWORK_NAME="openpunch-test-network"
 
 echo "🚀 Iniciando entorno de base de datos para OpenPunch..."
+
+# 1. Crear la red si no existe
+if [ ! "$(docker network ls | grep $NETWORK_NAME)" ]; then
+  echo "🌐 Creating docker network: $NETWORK_NAME"
+  docker network create $NETWORK_NAME
+fi
 
 # 1. Comprobar si el contenedor ya existe y eliminarlo
 if [ "$(docker ps -aq -f name=${CONTAINER_NAME})" ]; then
@@ -24,6 +31,7 @@ mkdir -p "${INIT_FOLDER}"
 # 3. Arrancar el contenedor
 docker run -d \
   --name ${CONTAINER_NAME} \
+  --network $NETWORK_NAME \
   -p 3306:3306 \
   -e TZ=Europe/Madrid \
   -e MYSQL_ROOT_PASSWORD=${DB_PASSWORD} \
