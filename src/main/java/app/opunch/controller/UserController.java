@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -35,6 +36,8 @@ public class UserController {
 
         List<PunchLog> userLogs = punchService.getAllFromUser(userId);
         model.addAttribute("logs", userLogs);
+
+        model.addAttribute("now", LocalDateTime.now());
 
         return "profile";
     }

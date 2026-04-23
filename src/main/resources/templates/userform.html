@@ -9,19 +9,19 @@
 
 <div class="container" style="max-width: 600px;">
   <header>
-    <h1>Nuevo Usuario</h1>
-    <a href="/users" class="btn btn-outline">Volver</a>
+    <h1>New User</h1>
+    <a href="/users" class="btn btn-outline">Go Back</a>
   </header>
 
   <form th:action="@{/users/save}" th:object="${user}" method="post" class="user-form">
 
     <div class="form-row">
       <div class="form-group">
-        <label>Nombre</label>
+        <label>Name</label>
         <input type="text" th:field="*{name}" required placeholder="Ej: Juan">
       </div>
       <div class="form-group">
-        <label>Apellido</label>
+        <label>Surname</label>
         <input type="text" th:field="*{surname}" required placeholder="Ej: Pérez">
       </div>
     </div>
@@ -34,7 +34,7 @@
       <div class="form-group">
         <label>Role</label>
         <select th:field="*{role}" required>
-          <option value="" disabled selected>Selecciona un rol</option>
+          <option value="" disabled selected>Select a role</option>
           <option value="1">Admin</option>
           <option value="2">User</option>
           <option value="3">Scanner</option>
@@ -54,8 +54,8 @@
       <input type="password" th:field="*{password}" required placeholder="••••••••">
     </div>
 
-    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px; padding: 12px;">
-      Crear Usuario y Generar QR
+    <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 20px; padding: 12px;">
+      Create User and generate QR Token
     </button>
   </form>
 </div>

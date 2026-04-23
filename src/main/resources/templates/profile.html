@@ -30,10 +30,29 @@
 
             <div class="form-group">
                 <label>Current Status</label>
-                <div style="margin-top: 5px; display: flex; align-items: center; gap: 15px;">
-                    <span th:class="${user.active} ? 'status status-in' : 'status status-out'"
-                          th:text="${user.active} ? 'ACTIVE' : 'INACTIVE'">
-                    </span>
+                <div style="margin-top: 5px;">
+                    <div th:class="${user.active} ? 'status status-in' : 'status status-out'" style="font-size:14px;">
+                        <span th:text="${user.active} ? 'Active' : 'Inactive'"></span>
+
+                        <span th:if="${user.lastLog != null and user.lastLog.logTime != null}">
+                            since <strong th:text="${#temporals.format(user.lastLog.logTime, 'HH:mm')}">15:00</strong>
+
+                            <th:block th:with="diff=${T(java.time.Duration).between(user.lastLog.logTime, now)}">
+                                <th:block th:with="days=${diff.toDays()},
+                                                   hours=${diff.toHours() % 24},
+                                                   mins=${diff.toMinutes() % 60}">
+                                    -
+                                    <span th:if="${days > 0}" th:text="${days} + 'd '"></span>
+                                    <span th:if="${hours > 0}" th:text="${hours} + 'h '"></span>
+                                    <span th:text="${mins} + 'min ago'">15min ago</span>
+                                </th:block>
+                            </th:block>
+                        </span>
+
+                        <span th:if="${user.lastLog == null}" style="font-style: italic; opacity: 0.8; margin-left: 5px;">
+                            - No logs yet
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -65,7 +84,7 @@
             <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #2c3e50;">Your QR Access</label>
 
             <div id="qr-container" style="width: 180px; height: 180px; background: white; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-                <span style="color: #adb5bd; font-size: 0.75rem; padding: 10px;">QR Generator Ready</span>
+                <span style="color: #adb5bd; font-size: 0.75rem; padding: 10px;">QR PLACEHOLDER</span>
             </div>
 
             <p style="font-size: 0.7rem; color: #95a5a6; margin-top: 15px; line-height: 1.4;">
