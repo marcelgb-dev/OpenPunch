@@ -31,7 +31,7 @@ public class PunchService {
 
     // Toggle logic - Creates logs and worksessions in the database depending on the User's last log
     @Transactional
-    public void togglePunch(String qrToken) throws RuntimeException {
+    public User togglePunch(String qrToken) throws RuntimeException {
 
         // 1. Searches the User in the repo by qrToken, Optional is empty if query returns no user
         Optional<User> userOptional = userRepo.findByToken(qrToken);
@@ -66,6 +66,9 @@ public class PunchService {
         else {
             openWorkSession(fullLog);
         }
+        user.setLastLog(fullLog);
+
+        return user;
     }
 
     private void openWorkSession (PunchLog startLog) {

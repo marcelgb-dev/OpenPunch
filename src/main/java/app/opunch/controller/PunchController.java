@@ -1,5 +1,6 @@
 package app.opunch.controller;
 
+import app.opunch.model.User;
 import app.opunch.service.PunchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,14 @@ public class PunchController {
                               RedirectAttributes flash,
                               @RequestHeader(value = "referer", required = false, defaultValue = "/users") String referer) {
         try {
-            punchService.togglePunch(token);
-            flash.addFlashAttribute("success", "¡Punch logged correctly!");
+            User user = punchService.togglePunch(token);
+
+            if (user.isActive()) {
+                flash.addFlashAttribute("success", "Punch-in logged correcty. Welcome " + user.getName() + "!");
+            } else {
+                flash.addFlashAttribute("success", "Punch-out logged correcty. Goodbye " + user.getName() + "!");
+            }
+
         } catch (Exception e) {
             flash.addFlashAttribute("error", "Punch error: " + e.getMessage());
             System.out.println("Punch error: " + e.getMessage());
