@@ -32,20 +32,20 @@
 <!--        <div id="reader"></div>-->
 
 <!--    </div>-->
-        <div class="manual-input-container">
-            <p>Ready for Barcode or Manual Entry</p>
-            <form th:action="@{/punch}" method="get" id="punch-form">
-                <input type="text"
-                       name="token"
-                       class="barcode-input"
-                       id="barcode-input"
-                       placeholder="Click & Scan..."
-                       autocomplete="off"
-                       autofocus>
-                <button type="submit" class="btn btn-primary" style="padding: 12px 20px;">Punch</button>
-            </form>
-        </div>
-    </div> </div>
+    <div class="manual-input-container">
+        <p>Ready for Barcode or Manual Entry</p>
+        <form th:action="@{/punch}" method="get" id="punch-form">
+            <input type="text"
+                   name="token"
+                   class="barcode-input"
+                   id="barcode-input"
+                   placeholder="Click & Scan..."
+                   autocomplete="off"
+                   autofocus>
+            <button type="submit" class="btn btn-primary" style="padding: 12px 20px;">Punch</button>
+        </form>
+    </div>
+</div>
 
 <!--<script src="https://unpkg.com/html5-qrcode"></script>-->
 <!--<script th:src="@{/js/scanner.js}"></script>-->
