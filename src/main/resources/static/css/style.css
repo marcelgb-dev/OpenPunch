@@ -71,6 +71,10 @@ tr:hover {
     font-weight: 500;
 }
 
+.btn:hover {
+    cursor: pointer;
+}
+
 .btn-primary {
     background-color: #3498db;
     color: white;
