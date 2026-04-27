@@ -217,7 +217,7 @@ tr:hover {
 
 /* --- SCANNER CARD --- */
 .scanner-card {
-    max-width: 500px;
+    max-width: 600px;
     margin: 20px auto;
     text-align: center;
     background: white;
@@ -229,6 +229,12 @@ tr:hover {
 /* Limpieza de la librería QR */
 #reader {
     border: none !important;
+}
+
+#reader video {
+    /* Fuerza a que el video ocupe el ancho disponible sin deformarse */
+    width: 100% !important;
+    height: auto !important;
 }
 
 #reader img,
