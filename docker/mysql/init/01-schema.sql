@@ -1,7 +1,7 @@
 -- 2. Usuarios
 CREATE TABLE `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `token` VARCHAR(36) NOT NULL,
+  `token` VARCHAR(10) NOT NULL,
   `username` VARCHAR(50) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `role` TINYINT NOT NULL DEFAULT '3', -- ADMIN = 1, SCANNER = 2, USER = 3

@@ -6,10 +6,10 @@ SET CHARACTER SET utf8mb4;
 -- 2. INSERTAR USUARIOS (4 Usuarios)
 -- =============================================
 INSERT INTO `users` (`id`, `token`, `username`, `password`, `role`, `name`, `surname`) VALUES
-(1, UUID(), 'admin', 'pass123', 1, 'ADMIN', ''),       -- Admin
-(2, UUID(), 'scanner', 'pass123', 2, 'SCANNER', ''),       -- Scanner
-(3, UUID(), 'user1', 'pass123', 3, 'NAME_1', 'SURNAME_1'),      -- Usuario de prueba 1
-(4, UUID(), 'user2', 'pass123', 3, 'NAME_2', 'SURNAME_2');       -- Usuario de prueba 2
+(1, 'Wm5SUrb5Uz', 'admin', 'pass123', 1, 'ADMIN', ''),       -- Admin
+(2, 'Q9rnTZ5drP', 'scanner', 'pass123', 2, 'SCANNER', ''),       -- Scanner
+(3, 'KqspOhPT8Z', 'user1', 'pass123', 3, 'NAME_1', 'SURNAME_1'),      -- Usuario de prueba 1
+(4, 'QQ0Nyug3pj', 'user2', 'pass123', 3, 'NAME_2', 'SURNAME_2');       -- Usuario de prueba 2
 
 
 -- =============================================
