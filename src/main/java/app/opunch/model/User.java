@@ -2,43 +2,27 @@ package app.opunch.model;
 
 public class User {
     private Integer id;
-    private Integer groupId;
-    private String qrToken;
+    private String token;
     private String username;
     private String password;
     private Integer role;
     private String name;
     private String surname;
 
-    private Group group;
     private PunchLog lastLog;
 
     // Constructor vacío
     public User(){};
 
     // Constructor principal
-    public User(Integer id, Integer groupId, String qrToken, String username, String password, Integer role, String name, String surname) {
+    public User(Integer id, String token, String username, String password, Integer role, String name, String surname) {
         this.id = id;
-        this.groupId = groupId;
-        this.qrToken = qrToken;
+        this.token = token;
         this.username = username;
         this.password = password;
         this.role = role;
         this.name = name;
         this.surname = surname;
-    }
-
-    // Constructor sobrecargado con Group
-    public User(Integer id, Integer groupId, String qrToken, String username, String password, Integer role, String name, String surname, Group group) {
-        this.id = id;
-        this.groupId = groupId;
-        this.qrToken = qrToken;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.name = name;
-        this.surname = surname;
-        this.group = group;
     }
 
     // Comprueba si el usuario está activo o no
@@ -60,18 +44,11 @@ public class User {
         this.id = id;
     }
 
-    public Integer getGroupId() {
-        return groupId;
+    public String getToken() {
+        return token;
     }
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getQrToken() {
-        return qrToken;
-    }
-    public void setQrToken(String qrToken) {
-        this.qrToken = qrToken;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getUsername() {
@@ -107,13 +84,6 @@ public class User {
     }
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-    public void setGroup(Group group) {
-        this.group = group;
     }
 
     public PunchLog getLastLog() {

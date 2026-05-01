@@ -27,8 +27,7 @@ public class JdbcPunchLogRepository implements PunchLogRepository {
         // Creates a User object with basic data to display paired with the log
         User user = new User();
         user.setId(rs.getInt("user_id"));
-        user.setGroupId(rs.getInt("group_id"));
-        user.setRole(rs.getInt("role"));
+        user.setRole(3);
         user.setName(rs.getString("name"));
         user.setSurname(rs.getString("surname"));
 

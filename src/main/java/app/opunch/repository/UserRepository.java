@@ -7,7 +7,6 @@ import java.util.Optional;
 public interface UserRepository extends BaseRepository {
 
     List<User> findAll();
-    List<User> findAllByGroup(Integer groupId);
     List<User> findAllActive();
 
     Optional<User> findById(Integer id);

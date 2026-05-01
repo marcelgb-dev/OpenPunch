@@ -31,14 +31,14 @@ public class PunchService {
 
     // Toggle logic - Creates logs and worksessions in the database depending on the User's last log
     @Transactional
-    public User togglePunch(String qrToken) throws RuntimeException {
+    public User togglePunch(String token) throws RuntimeException {
 
-        // 1. Searches the User in the repo by qrToken, Optional is empty if query returns no user
-        Optional<User> userOptional = userRepo.findByToken(qrToken);
+        // 1. Searches the User in the repo by token, Optional is empty if query returns no user
+        Optional<User> userOptional = userRepo.findByToken(token);
 
         // Checks whether the Optional is full, throws an exception if is not
         if (userOptional.isEmpty()) {
-            throw new RuntimeException("The token " + qrToken + " doesn't exist");
+            throw new RuntimeException("The token " + token + " doesn't exist");
         }
 
         // 2. Creates a User object from the Optional

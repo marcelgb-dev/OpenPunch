@@ -35,8 +35,7 @@ public class JdbcWorkSessionRepository implements WorkSessionRepository {
         // Creates a User object with basic data to display paired with the Work Session
         User user = new User();
         user.setId(rs.getInt("user_id"));
-        user.setGroupId(rs.getInt("group_id"));
-        user.setRole(rs.getInt("role"));
+        user.setRole(2);
         user.setName(rs.getString("name"));
         user.setSurname(rs.getString("surname"));
 

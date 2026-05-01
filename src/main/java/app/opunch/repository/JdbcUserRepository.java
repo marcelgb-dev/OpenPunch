@@ -21,11 +21,10 @@ public class JdbcUserRepository implements UserRepository {
         // Create the User object and its data
         User u = new User();
         u.setId(rs.getInt("user_id"));
-        u.setGroupId(rs.getInt("group_id"));
-        u.setQrToken(rs.getString("qr_token"));
+        u.setToken(rs.getString("token"));
         u.setName(rs.getString("name"));
         u.setSurname(rs.getString("surname"));
-        u.setRole(rs.getInt("role"));
+        u.setRole(3); // User is default role
         int lastLogId = rs.getInt("last_log_id");
 
         // If there's an last log for the user, extract its data and save it as a PunchLog object
@@ -74,14 +73,6 @@ public class JdbcUserRepository implements UserRepository {
         return jdbc.query(sql, userStatusViewRowMapper);
     }
 
-    // Select the status data and last log from all users belonging to a specific group
-    @Override
-    public List<User> findAllByGroup(Integer groupId) {
-        String sql = "SELECT * FROM view_user_status WHERE group_id = ?";
-
-        return jdbc.query(sql, userStatusViewRowMapper, groupId);
-    }
-
     // Select the status data and last log from a specific user by their id
     @Override
     public Optional<User> findById(Integer id) {
@@ -92,10 +83,10 @@ public class JdbcUserRepository implements UserRepository {
         return returnOptional(results);
     }
 
-    // Select the status data and last log from a specific user by their qr_token
+    // Select the status data and last log from a specific user by their token
     @Override
     public Optional<User> findByToken(String token) {
-        String sql = "SELECT * FROM view_user_status WHERE qr_token = ?";
+        String sql = "SELECT * FROM view_user_status WHERE token = ?";
 
         List<User> results = jdbc.query(sql, userStatusViewRowMapper, token);
 
@@ -117,12 +108,11 @@ public class JdbcUserRepository implements UserRepository {
     public void save(User user) {
         String sql = """
                     INSERT INTO users 
-                    (group_id, qr_token, username, password, role, name, surname) 
+                    (token, username, password, role, name, surname) 
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     """;
         jdbc.update(sql,
-                user.getGroupId(),
-                user.getQrToken(),
+                user.getToken(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getRole(),

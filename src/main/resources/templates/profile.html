@@ -21,9 +21,9 @@
                 <label>System Role</label>
                 <div style="margin-top: 5px;">
                         <span class="status"
-                              th:style="${user.role == 1} ? 'background:#ebedff; color:#34495e;' : ''"
-                              th:classappend="${user.role == 2} ? 'status-in' : (${user.role == 3} ? 'status-out' : '')"
-                              th:text="${user.role == 1} ? 'ADMIN' : (${user.role == 2} ? 'USER' : 'SCANNER')">
+                              th:style="${user.role == 3} ? 'background:#ebedff; color:#34495e;' : ''"
+                              th:classappend="${user.role == 2} ? 'status-in' : (${user.role == 1} ? 'status-out' : '')"
+                              th:text="${user.role == 1} ? 'ADMIN' : (${user.role == 3} ? 'USER' : 'SCANNER')">
                         </span>
                 </div>
             </div>
@@ -59,11 +59,11 @@
             <div class="form-group" style="margin-top: 20px;">
                 <label>Personal Token (Internal)</label>
                 <code style="display: block; background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #eee; font-size: 0.85rem; color: #666; margin-top: 5px;"
-                      th:text="${user.qrToken}">
+                      th:text="${user.token}">
                     uuid-token-placeholder
                 </code>
             </div>
-            <a th:href="@{/punch(token=${user.qrToken})}"
+            <a th:href="@{/punch(token=${user.token})}"
                class="btn btn-primary"
                style="background-color: #27ae60; border: none;">
                 Punch

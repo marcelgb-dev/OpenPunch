@@ -43,7 +43,7 @@ public class UserService {
             user.setPassword(encoder.encode(rawPassword));
 
         // QR Token generation (UUID)
-        user.setQrToken(java.util.UUID.randomUUID().toString());
+        user.setToken(java.util.UUID.randomUUID().toString());
 
         userRepo.save(user);
     }
