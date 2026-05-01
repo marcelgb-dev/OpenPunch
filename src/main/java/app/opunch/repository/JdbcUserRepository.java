@@ -109,7 +109,7 @@ public class JdbcUserRepository implements UserRepository {
         String sql = """
                     INSERT INTO users 
                     (token, username, password, role, name, surname) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?)
                     """;
         jdbc.update(sql,
                 user.getToken(),
