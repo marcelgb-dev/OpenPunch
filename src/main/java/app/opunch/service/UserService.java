@@ -4,6 +4,7 @@ import app.opunch.model.User;
 import app.opunch.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,15 @@ public class UserService {
         return optionalUser.get();
     }
 
+    // Returns a NanoID with default number and alphabet of 10 characters long
+    public String newToken() {
+        return NanoIdUtils.randomNanoId(
+                NanoIdUtils.DEFAULT_NUMBER_GENERATOR,
+                NanoIdUtils.DEFAULT_ALPHABET,
+                10
+        );
+    }
+
     public void save(User user) {
 
         // Password encoding with BCrypt
@@ -42,8 +52,8 @@ public class UserService {
         if (rawPassword != null)
             user.setPassword(encoder.encode(rawPassword));
 
-        // QR Token generation (UUID)
-        user.setToken(java.util.UUID.randomUUID().toString());
+        // QR Token generation (NanoID)
+        user.setToken(newToken());
 
         userRepo.save(user);
     }
