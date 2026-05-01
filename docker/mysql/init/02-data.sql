@@ -7,9 +7,10 @@ SET CHARACTER SET utf8mb4;
 -- =============================================
 INSERT INTO `users` (`id`, `token`, `username`, `password`, `role`, `name`, `surname`) VALUES
 (1, UUID(), 'admin', 'pass123', 1, 'ADMIN', ''),       -- Admin
-(2, UUID(), 'user1', 'pass123', 2, 'NAME_1', 'SURNAME_1'),      -- Usuario de prueba 1
-(3, UUID(), 'user2', 'pass123', 2, 'NAME_2', 'SURNAME_2'),       -- Usuario de prueba 2
-(4, UUID(), 'scanner', 'pass123', 3, 'SCANNER', '');       -- Scanner
+(2, UUID(), 'scanner', 'pass123', 2, 'SCANNER', ''),       -- Scanner
+(3, UUID(), 'user1', 'pass123', 3, 'NAME_1', 'SURNAME_1'),      -- Usuario de prueba 1
+(4, UUID(), 'user2', 'pass123', 3, 'NAME_2', 'SURNAME_2');       -- Usuario de prueba 2
+
 
 -- =============================================
 -- 3. INSERTAR LOGS (Historial de eventos)
@@ -18,12 +19,12 @@ INSERT INTO `users` (`id`, `token`, `username`, `password`, `role`, `name`, `sur
 
 -- NAME_1 (ID 2): Turno completo ayer
 INSERT INTO `punch_logs` (`id`, `user_id`, `log_time`, `event`) VALUES 
-(1, 2, '2026-04-19 08:05:00', 'IN'),
-(2, 2, '2026-04-19 16:15:00', 'OUT');
+(1, 3, '2026-04-19 08:05:00', 'IN'),
+(2, 3, '2026-04-19 16:15:00', 'OUT');
 
 -- NAME_2 (ID 3): Turno completo ayer
 INSERT INTO `punch_logs` (`id`, `user_id`, `log_time`, `event`) VALUES 
-(3, 3, '2026-04-19 09:00:00', 'IN');
+(3, 4, '2026-04-19 09:00:00', 'IN');
 
 -- =============================================
 -- 4. INSERTAR SESIONES
@@ -31,8 +32,8 @@ INSERT INTO `punch_logs` (`id`, `user_id`, `log_time`, `event`) VALUES
 
 -- Sesión de NAME_1 (8h 10m = 490 min)
 INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `end_log_id`, `start_time`, `end_time`, `duration_minutes`)
-VALUES (2, 1, 2, '2026-04-19 08:05:00', '2026-04-19 16:15:00', 490);
+VALUES (3, 1, 2, '2026-04-19 08:05:00', '2026-04-19 16:15:00', 490);
 
 -- Sesión de NAME_2 (abierta)
 INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `start_time`)
-VALUES (3, 3,  '2026-04-20 09:00:00');
+VALUES (4, 3,  '2026-04-20 09:00:00');

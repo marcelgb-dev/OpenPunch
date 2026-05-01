@@ -4,7 +4,7 @@ CREATE TABLE `users` (
   `token` VARCHAR(36) NOT NULL,
   `username` VARCHAR(50) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
-  `role` TINYINT NOT NULL DEFAULT '2',
+  `role` TINYINT NOT NULL DEFAULT '3', -- ADMIN = 1, SCANNER = 2, USER = 3
   `name` VARCHAR(50) NOT NULL,
   `surname` VARCHAR(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -53,7 +53,7 @@ FROM users u
         MAX(id)
     FROM punch_logs WHERE user_id = u.id
     )
-WHERE u.role = 2;
+WHERE u.role = 3;
 
 -- Logs + basic data from their Users
 CREATE VIEW view_punch_logs AS
