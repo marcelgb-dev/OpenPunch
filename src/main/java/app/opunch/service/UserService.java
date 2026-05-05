@@ -24,6 +24,14 @@ public class UserService {
         return userRepo.findAll();
     }
 
+    public List<User> getAllUsers() {
+        return userRepo.findAllFull();
+    }
+
+    public List<User> getUsersByRole(Integer role) {
+        return userRepo.findByRole(role);
+    }
+
     public User getUser(Integer id) {
         Optional<User> optionalUser = userRepo.findById(id);
 
@@ -45,16 +53,31 @@ public class UserService {
         );
     }
 
-    public void save(User user) {
+    public void createUser(User user) {
 
         // Password encoding with BCrypt
         String rawPassword = user.getPassword();
         if (rawPassword != null)
             user.setPassword(encoder.encode(rawPassword));
 
-        // QR Token generation (NanoID)
-        user.setToken(newToken());
+        // Automatic Token generation (NanoID) if there's no manual entry
+        if (user.getToken().isEmpty())
+            user.setToken(newToken());
 
         userRepo.save(user);
+    }
+
+    // Updates the information of an existing user
+    public void updateUser(User user) {
+
+        // Checks if the User exists
+        if (getUser(user.getId()) == null) {
+            System.out.println("User with ID " + user.getId() + " does not exist in the database.");
+            return;
+        }
+
+        // Updates the user fields with save()
+        userRepo.save(user);
+
     }
 }

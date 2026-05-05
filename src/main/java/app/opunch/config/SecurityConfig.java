@@ -1,5 +1,6 @@
 package app.opunch.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,13 +20,33 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(10);
     }
 
+    @Autowired
+    private CustomSuccessHandler successHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Deshabilita CSRF para que tus formularios funcionen fácil
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Permite el acceso total a todas las rutas
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/setup/**").permitAll() // Recursos estáticos
+                        .requestMatchers("/admin/**", "/dashboard", "/users").hasRole("ADMIN") // Solo administradores
+                        .requestMatchers("/scanner/**").hasRole("SCANNER") // Estación de fichaje
+                        .anyRequest().authenticated() // El resto requiere login
+                )
+                .formLogin(form -> form
+                        .loginPage("/login") // Nuestra página personalizada
+                        .usernameParameter("username") // Debe coincidir con el name="" de tu <input> en HTML
+                        .passwordParameter("password")
+                        .successHandler(successHandler)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // URL que activará el cierre de sesión
+                        .logoutSuccessUrl("/login?logout") // Redirección tras éxito
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 );
+
         return http.build();
     }
 }

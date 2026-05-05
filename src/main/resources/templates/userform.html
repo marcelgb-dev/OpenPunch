@@ -22,7 +22,7 @@
       </div>
       <div class="form-group">
         <label>Surname</label>
-        <input type="text" th:field="*{surname}" required placeholder="Ej: Pérez">
+        <input type="text" th:field="*{surname}" placeholder="Ej: Pérez">
       </div>
     </div>
 
@@ -50,8 +50,13 @@
       <input type="password" th:field="*{password}" required placeholder="••••••••">
     </div>
 
+    <div class="form-group">
+      <label>Token</label>
+      <input type="text" th:field="*{token}" placeholder="Leave empty to autogenerate">
+    </div>
+
     <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 20px; padding: 12px;">
-      Create User and generate Token
+      Create User
     </button>
   </form>
 </div>

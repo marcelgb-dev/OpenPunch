@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenPunch - System Initialization</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .setup-container { max-width: 800px; margin: 40px auto; font-family: sans-serif; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
+        .card h3 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
+        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-submit { grid-column: span 2; padding: 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1.1em; }
+        .header-msg { text-align: center; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+<div class="setup-container">
+    <div class="header-msg">
+        <h1>🏗️ OpenPunch Initialization</h1>
+        <p>Complete the following forms to create the mandatory system roles.</p>
+    </div>
+
+    <form th:action="@{/setup/admin}" method="post" class="grid">
+        <!-- Formulario Administrator[cite: 3] -->
+        <div class="card">
+            <h3>1. System Administrator</h3>
+            <p><small>Full access to logs, users, and groups.</small></p>
+            <div class="form-group">
+                <label>Admin Name</label>
+                <input type="text" name="adminName" placeholder="e.g. John Doe" required autofocus>
+            </div>
+            <div class="form-group">
+                <label>Admin Username</label>
+                <input type="text" name="adminUser" required>
+            </div>
+            <div class="form-group">
+                <label>Admin Password</label>
+                <input type="password" name="adminPass" required>
+            </div>
+        </div>
+
+        <!-- Formulario Scanner[cite: 3] -->
+        <div class="card">
+            <h3>2. Scanner station</h3>
+            <p><small>Access to the punch scanning interface.</small></p>
+            <div class="form-group">
+                <label>Scanner Username</label>
+                <input type="text" name="scannerUser" required>
+            </div>
+            <div class="form-group">
+                <label>Scanner Password</label>
+                <input type="password" name="scannerPass" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Finalize Setup & Initialize Database</button>
+    </form>
+</div>
+</body>
+</html>

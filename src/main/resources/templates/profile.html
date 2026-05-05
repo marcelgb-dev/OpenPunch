@@ -11,6 +11,9 @@
         <h1 th:text="${user.name} + ' ' + ${user.surname}">User Name</h1>
         <div class="header-actions">
             <a href="/users" class="btn btn-outline">Back to List</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-logout">Log Out</button>
+            </form>
         </div>
     </header>
 

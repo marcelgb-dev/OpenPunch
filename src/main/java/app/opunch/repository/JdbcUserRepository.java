@@ -16,6 +16,23 @@ public class JdbcUserRepository implements UserRepository {
     private final JdbcTemplate jdbc;
 
     // RowMapper template to use with the "User Status View" queries
+    private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
+
+        // Create the User object and its data
+        User u = new User();
+        u.setId(rs.getInt("id"));
+        u.setToken(rs.getString("token"));
+        u.setUsername(rs.getString("username"));
+        u.setPassword(rs.getString("password"));
+        u.setName(rs.getString("name"));
+        u.setSurname(rs.getString("surname"));
+        u.setRole(rs.getInt("role"));
+
+        // Returns the User object
+        return u;
+    };
+
+    // RowMapper template to use with the "User Status View" queries
     private final RowMapper<User> userStatusViewRowMapper = (rs, rowNum) -> {
 
         // Create the User object and its data
@@ -60,6 +77,13 @@ public class JdbcUserRepository implements UserRepository {
 
     // Select the status data and last log from all users
     @Override
+    public List<User> findAllFull() {
+        String sql = "SELECT * users";
+        return jdbc.query(sql, userRowMapper);
+    }
+
+    // Select the status data and last log from all users
+    @Override
     public List<User> findAll() {
         String sql = "SELECT * FROM view_user_status";
         return jdbc.query(sql, userStatusViewRowMapper);
@@ -71,6 +95,13 @@ public class JdbcUserRepository implements UserRepository {
         String sql = "SELECT * FROM view_user_status WHERE last_log_event = 'IN'";
 
         return jdbc.query(sql, userStatusViewRowMapper);
+    }
+
+    // Selects all existing users with the specified role
+    public List<User> findByRole(Integer role) {
+        String sql = "SELECT * FROM users WHERE role = ?";
+
+        return jdbc.query(sql, userRowMapper, role);
     }
 
     // Select the status data and last log from a specific user by their id
@@ -103,22 +134,38 @@ public class JdbcUserRepository implements UserRepository {
         return returnOptional(results);
     }
 
-    // Create a new user in the DB
+
+    // Create or update a user in the DB
     @Override
     public void save(User user) {
-        String sql = """
+
+        Integer id = user.getId();
+        String sql;
+        String token = user.getToken();
+        String username = user.getUsername();
+        String password = user.getPassword();
+        Integer role = user.getRole();
+        String name = user.getName();
+        String surname = user.getSurname();
+
+        if (id == null) {
+            sql = """
                     INSERT INTO users 
                     (token, username, password, role, name, surname) 
                     VALUES (?, ?, ?, ?, ?, ?)
                     """;
-        jdbc.update(sql,
-                user.getToken(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getRole(),
-                user.getName(),
-                user.getSurname()
-        );
+            jdbc.update(sql, token, username, password, role, name, surname);
+        }
+        else {
+            sql = """
+                    UPDATE users 
+                    SET token = ?, username = ?, password = ?, role = ?, name = ?, surname = ?
+                    WHERE id = ?
+                    """;
+
+            jdbc.update(sql, token, username, password, role, name, surname, id);
+        }
     }
+
 
 }

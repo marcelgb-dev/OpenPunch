@@ -11,7 +11,10 @@
     <header>
         <h1>User List</h1>
         <div class="header-actions">
-            <a href="/" class="btn btn-outline">See Log History</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-logout">Log Out</button>
+            </form>
+            <a href="/dashboard" class="btn btn-outline">See Log History</a>
             <a href="/users/new" class="btn btn-primary">+ Add User</a>
         </div>
 

@@ -6,10 +6,8 @@ SET CHARACTER SET utf8mb4;
 -- 2. INSERTAR USUARIOS (4 Usuarios)
 -- =============================================
 INSERT INTO `users` (`id`, `token`, `username`, `password`, `role`, `name`, `surname`) VALUES
-(1, 'Wm5SUrb5Uz', 'admin', 'pass123', 1, 'ADMIN', ''),       -- Admin
-(2, 'Q9rnTZ5drP', 'scanner', 'pass123', 2, 'SCANNER', ''),       -- Scanner
-(3, 'KqspOhPT8Z', 'user1', 'pass123', 3, 'NAME_1', 'SURNAME_1'),      -- Usuario de prueba 1
-(4, 'QQ0Nyug3pj', 'user2', 'pass123', 3, 'NAME_2', 'SURNAME_2');       -- Usuario de prueba 2
+(1, 'KqspOhPT8Z', 'user1', '$2a$10$GO89Y9eE5mqFqtpSYjavauqY8prPtBd.OWcP0j07Kg5PC7B.8IrrW', 3, 'NAME_1', 'SURNAME_1'),      -- Usuario de prueba 1
+(2, 'QQ0Nyug3pj', 'user2', '$2a$10$GO89Y9eE5mqFqtpSYjavauqY8prPtBd.OWcP0j07Kg5PC7B.8IrrW', 3, 'NAME_2', 'SURNAME_2');       -- Usuario de prueba 2
 
 
 -- =============================================
@@ -19,12 +17,12 @@ INSERT INTO `users` (`id`, `token`, `username`, `password`, `role`, `name`, `sur
 
 -- NAME_1 (ID 2): Turno completo ayer
 INSERT INTO `punch_logs` (`id`, `user_id`, `log_time`, `event`) VALUES 
-(1, 3, '2026-04-19 08:05:00', 'IN'),
-(2, 3, '2026-04-19 16:15:00', 'OUT');
+(1, 1, '2026-04-19 08:05:00', 'IN'),
+(2, 1, '2026-04-19 16:15:00', 'OUT');
 
 -- NAME_2 (ID 3): Turno completo ayer
 INSERT INTO `punch_logs` (`id`, `user_id`, `log_time`, `event`) VALUES 
-(3, 4, '2026-04-19 09:00:00', 'IN');
+(3, 2, '2026-04-19 09:00:00', 'IN');
 
 -- =============================================
 -- 4. INSERTAR SESIONES
@@ -32,8 +30,8 @@ INSERT INTO `punch_logs` (`id`, `user_id`, `log_time`, `event`) VALUES
 
 -- Sesión de NAME_1 (8h 10m = 490 min)
 INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `end_log_id`, `start_time`, `end_time`, `duration_minutes`)
-VALUES (3, 1, 2, '2026-04-19 08:05:00', '2026-04-19 16:15:00', 490);
+VALUES (1, 1, 2, '2026-04-19 08:05:00', '2026-04-19 16:15:00', 490);
 
 -- Sesión de NAME_2 (abierta)
 INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `start_time`)
-VALUES (4, 3,  '2026-04-20 09:00:00');
+VALUES (2, 3,  '2026-04-20 09:00:00');

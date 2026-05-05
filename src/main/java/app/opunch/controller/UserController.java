@@ -52,7 +52,7 @@ public class UserController {
     public String saveUser(@ModelAttribute("user") User user) {
 
         // 2. Guardamos en la base de datos
-        userService.save(user);
+        userService.createUser(user);
 
         // 3. Redirigimos a la lista de usuarios
         return "redirect:/users";

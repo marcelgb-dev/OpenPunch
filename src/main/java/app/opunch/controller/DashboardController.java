@@ -15,7 +15,7 @@ public class DashboardController {
         this.punchService = punchService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/dashboard")
     public String viewDashboard(Model model) {
         model.addAttribute("logs", punchService.getAllLogs());
         return "dashboard";
