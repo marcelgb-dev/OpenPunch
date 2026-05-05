@@ -61,7 +61,7 @@ public class UserService {
             user.setPassword(encoder.encode(rawPassword));
 
         // Automatic Token generation (NanoID) if there's no manual entry
-        if (user.getToken().isEmpty())
+        if (user.getToken()== null || user.getToken().isEmpty())
             user.setToken(newToken());
 
         userRepo.save(user);

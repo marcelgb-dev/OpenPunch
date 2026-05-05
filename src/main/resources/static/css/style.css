@@ -383,12 +383,12 @@ tr:hover {
 }
 
 /* Añadir al final de style.css */
-.header-actions .btn-logout {
+.btn-logout {
     background-color: #e74c3c;
     color: white;
 }
 
-.header-actions .btn-logout:hover {
+.btn-logout:hover {
     background-color: white;
     border-color: #e74c3c; /* Color rojo suave para "salir" */
     color: #e74c3c;
