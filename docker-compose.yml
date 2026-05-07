@@ -25,8 +25,6 @@ services:
     build: .
     container_name: openpunch-app
     restart: always
-    ports:
-      - "8080:8080"
     depends_on:
       - db
     environment:
@@ -35,6 +33,21 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/openpunch?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Europe/Madrid
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
+    networks:
+      - backend-private
+  # --- Proxy Inverso (Nginx) ---
+  proxy:
+    image: nginx:stable-alpine
+    container_name: openpunch-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      #- ./docker/nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - app
     networks:
       - frontend-public
       - backend-private
