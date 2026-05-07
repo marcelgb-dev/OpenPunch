@@ -5,7 +5,7 @@ target/
 !**/src/test/**/target/
 docker/mysql/data
 *.pem
-.env
+*.env
 
 ### STS ###
 .apt_generated
