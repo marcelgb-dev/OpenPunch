@@ -1,3 +1,3 @@
-#!/usr/bin/zsh
+#!/usr/bin/bash
 
-sudo rm -rf data
+sudo rm -rf "$(dirname "$0")/data"
