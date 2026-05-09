@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>User Profile - OpenPunch</title>
@@ -10,7 +11,7 @@
     <header>
         <h1 th:text="${user.name} + ' ' + ${user.surname}">User Name</h1>
         <div class="header-actions">
-            <a href="/users" class="btn btn-outline">Back to List</a>
+            <a sec:authorize="hasRole('ADMIN')" href="/users" class="btn btn-outline">Back to List</a>
             <form th:action="@{/logout}" method="post" style="display: inline;">
                 <button type="submit" class="btn btn-logout">Log Out</button>
             </form>
@@ -59,14 +60,14 @@
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 20px;">
+            <div sec:authorize="hasRole('ADMIN')" class="form-group" style="margin-top: 20px;">
                 <label>Personal Token (Internal)</label>
                 <code style="display: block; background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #eee; font-size: 0.85rem; color: #666; margin-top: 5px;"
                       th:text="${user.token}">
                     uuid-token-placeholder
                 </code>
             </div>
-            <a th:href="@{/punch(token=${user.token})}"
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/punch(token=${user.token})}"
                class="btn btn-primary"
                style="background-color: #27ae60; border: none;">
                 Punch
@@ -83,17 +84,6 @@
             </div>
         </div>
 
-        <div style="flex: 0 0 250px; text-align: center; padding: 25px; border: 1px solid #f0f2f5; border-radius: 12px; background: #fafafa;">
-            <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #2c3e50;">Your QR Access</label>
-
-            <div id="qr-container" style="width: 180px; height: 180px; background: white; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-                <span style="color: #adb5bd; font-size: 0.75rem; padding: 10px;">QR PLACEHOLDER</span>
-            </div>
-
-            <p style="font-size: 0.7rem; color: #95a5a6; margin-top: 15px; line-height: 1.4;">
-                Scan this code at the terminal to register your entry or exit.
-            </p>
-        </div>
     </div>
 
     <div class="logs-section">
