@@ -44,17 +44,33 @@ public class UserController {
 
     @GetMapping("/users/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("user", new User());
+        User newUser = new User();
+        // We set the role to 3 so the new user form takes it as the default selection
+        newUser.setRole(3);
+
+        model.addAttribute("user", newUser);
         return "userform";
     }
 
     @PostMapping("/users/save")
     public String saveUser(@ModelAttribute("user") User user) {
 
-        // 2. Guardamos en la base de datos
+        // Guardamos en la base de datos
         userService.createUser(user);
 
-        // 3. Redirigimos a la lista de usuarios
+        // edirigimos a la lista de usuarios
         return "redirect:/users";
     }
+
+    @PostMapping("/users/delete")
+    public String deleteUser(@RequestParam("userId") Integer id) {
+
+        // Borramos el usuario seleccionado
+        userService.deleteUser(id);
+
+        // Redirigimos a la lista de usuarios
+        return "redirect:/users";
+    }
+
+
 }

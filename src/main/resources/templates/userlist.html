@@ -67,6 +67,13 @@
                        class="btn btn-outline">
                         Profile
                     </a>
+                    <form th:action="@{/users/delete}" method="post">
+                        <input type="hidden" name="userId" th:value="${user.id}" />
+                        <button type="submit" class="btn btn-logout"
+                                th:onclick="return confirm('Are you sure? This will remove all Work Sessions, Punch Logs and User details of ' + [[${user.name}]] + '.');">
+                            Delete
+                        </button>
+                    </form>
                 </div>
             </td>
         </tr>
