@@ -3,10 +3,13 @@ package app.opunch.repository;
 import app.opunch.model.PunchLog;
 import app.opunch.model.User;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -165,6 +168,15 @@ public class JdbcUserRepository implements UserRepository {
 
             jdbc.update(sql, token, username, password, role, name, surname, id);
         }
+    }
+
+    @Override
+    @Transactional
+    public void remove(Integer id) throws DataAccessException {
+        // Removes all work sessions and logs related to the user, and then the user itself
+        jdbc.update("DELETE FROM work_sessions WHERE user_id = ?", id);
+        jdbc.update("DELETE FROM punch_logs WHERE user_id = ?", id);
+        jdbc.update("DELETE FROM users WHERE id = ?", id);
     }
 
 

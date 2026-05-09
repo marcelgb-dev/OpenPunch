@@ -16,4 +16,5 @@ public interface UserRepository extends BaseRepository {
     Optional<User> findByUsername(String username);
 
     void save(User user);
+    void remove(Integer id);
 }

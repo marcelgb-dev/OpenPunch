@@ -2,10 +2,12 @@ package app.opunch.service;
 
 import app.opunch.model.User;
 import app.opunch.repository.UserRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,6 +80,14 @@ public class UserService {
 
         // Updates the user fields with save()
         userRepo.save(user);
+    }
 
+    // Removes an existing user and their related work sessions + punch logs
+    public void deleteUser(Integer userId) {
+        try {
+            userRepo.remove(userId);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
     }
 }
