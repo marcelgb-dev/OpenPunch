@@ -8,7 +8,8 @@ CREATE TABLE `users` (
   `name` VARCHAR(50) NOT NULL,
   `surname` VARCHAR(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `token_UNIQUE` (`token`)
+  UNIQUE KEY `token_UNIQUE` (`token`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 3. Logs de fichaje
