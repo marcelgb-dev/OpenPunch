@@ -38,7 +38,7 @@ public class PunchService {
     }
 
     // Toggle logic - Creates logs and worksessions in the database depending on the User's last log
-    @Transactional
+    @Transactional(noRollbackFor = InvalidSessionException.class)
     public User togglePunch(String token) throws RuntimeException {
 
         // 1. Searches the User in the repo by token, Optional is empty if query returns no user
@@ -84,13 +84,12 @@ public class PunchService {
         wsRepo.openSession(startLog.getUserId(), startLog.getId(), startLog.getLogTime());
     }
 
-    private boolean closeWorkSession (PunchLog endLog) throws RuntimeException {
+    private void closeWorkSession (PunchLog endLog) throws RuntimeException {
         System.out.println("Method closeWorkSession - Log ID:" + endLog.getId());
         Optional <WorkSession> optionalWs = wsRepo.findOpenSession(endLog.getUserId());
 
         if (optionalWs.isEmpty()) {
-            System.err.println("WARNING: PunchService.closeWorkSession didn't find an open session for user " + endLog.getUserId());
-            return false;
+            throw new RuntimeException("WARNING: PunchService.closeWorkSession didn't find an open session for user " + endLog.getUserId());
         }
 
         WorkSession ws = optionalWs.get();
@@ -101,7 +100,6 @@ public class PunchService {
         Integer duration = ws.calculateDuration();
 
         if (duration < minSessionDuration) {
-            System.out.println("Session " + wsId + " was shorter than MIN_SESSION_DURATION so it was automatically removed.");
 
             try {
                 logRepo.remove(ws.getStartLogId());
@@ -113,18 +111,20 @@ public class PunchService {
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
-            return false;
+            throw new InvalidSessionException("Session #" + wsId + " was shorter than " + minSessionDuration + " minutes, so it was automatically removed.");
         }
 
         if (duration > maxSessionDuration) {
             duration = maxSessionDuration;
-            System.out.println("WARNING: Session " + wsId + " was longer than " + maxSessionDuration + " so the duration was clamped to " + maxSessionDuration);
+            ws.setDurationMinutes(duration);
+
+            wsRepo.closeSession(wsId, endLog.getId(), ws.getEndTime(), ws.getDurationMinutes());
+            throw new InvalidSessionException("WARNING: Session #" + wsId + " was longer than " + maxSessionDuration + " minutes so the duration was clamped to " + maxSessionDuration + " minutes.");
         }
 
         ws.setDurationMinutes(duration);
 
         wsRepo.closeSession(wsId, endLog.getId(), ws.getEndTime(), ws.getDurationMinutes());
-        return true;
 
     }
 

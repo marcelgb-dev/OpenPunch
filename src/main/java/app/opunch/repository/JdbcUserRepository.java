@@ -88,7 +88,7 @@ public class JdbcUserRepository implements UserRepository {
     // Select the status data and last log from all users
     @Override
     public List<User> findAll() {
-        String sql = "SELECT * FROM view_user_status";
+        String sql = "SELECT * FROM view_user_status ORDER BY last_log_event IS NULL ASC, last_log_event ASC, last_log_time DESC";
         return jdbc.query(sql, userStatusViewRowMapper);
     }
 

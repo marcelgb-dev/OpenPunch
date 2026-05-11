@@ -12,7 +12,7 @@
 <div class="container" style="max-width: 600px;">
     <header>
         <h1>Edit User - ID #<span th:text="${user.id}">1</span></h1>
-        <a href="/users" class="btn btn-primary">
+        <a th:href="@{/profile/{id}(id=${user.id})}" class="btn btn-primary">
             <span class="material-symbols-outlined">keyboard_return</span>
             Back
         </a>
