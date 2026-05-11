@@ -28,9 +28,9 @@ INSERT INTO `punch_logs` (`id`, `user_id`, `log_time`, `event`) VALUES
 -- 4. INSERTAR SESIONES
 -- =============================================
 
--- Sesión de NAME_1 (8h 10m = 490 min)
+-- Sesión de NAME_1 (6h 20m = 380 min)
 INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `end_log_id`, `start_time`, `end_time`, `duration_minutes`)
-VALUES (1, 1, 2, '2026-04-19 08:05:00', '2026-04-19 16:15:00', 490);
+VALUES (1, 1, 2, '2026-04-19 14:10:00', '2026-04-19 20:30:00', 490);
 
 -- Sesión de NAME_2 (abierta)
 INSERT INTO `work_sessions` (`user_id`, `start_log_id`, `start_time`)
