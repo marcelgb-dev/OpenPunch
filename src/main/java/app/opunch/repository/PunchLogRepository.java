@@ -10,4 +10,6 @@ public interface PunchLogRepository extends BaseRepository {
     List<PunchLog> findNumberByUser(Integer userId, int numberOfLogs);
 
     void save(PunchLog punchLog);
+
+    void remove(Integer punchLogId);
 }

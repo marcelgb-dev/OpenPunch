@@ -2,6 +2,7 @@ package app.opunch.controller;
 
 import app.opunch.model.User;
 import app.opunch.service.PunchService;
+import app.opunch.service.WorkSessionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -13,9 +14,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PunchController {
 
     private final PunchService punchService;
+    private final WorkSessionService sessionService;
 
-    public PunchController(PunchService punchService) {
+    public PunchController(PunchService punchService, WorkSessionService sessionService) {
         this.punchService = punchService;
+        this.sessionService = sessionService;
     }
 
     // Ruta para el fichaje: /punch?token=XXXX
@@ -26,10 +29,22 @@ public class PunchController {
         try {
             User user = punchService.togglePunch(token);
 
+            Integer userId = user.getId();
+
+            Integer lastSessionTime = sessionService.getLastSession(userId).get().getDurationMinutes();
+            Integer lastSessionHours = lastSessionTime / 60;
+            Integer lastSessionMinutes = lastSessionTime % 60;
+
+            Integer [] totalTime = sessionService.totalTime(sessionService.getAllFromUser(userId));
+            Integer totalHours = totalTime[0];
+            Integer totalMinutes = totalTime[1];
+
             if (user.isActive()) {
                 flash.addFlashAttribute("success", "Punch-in logged correcty. Welcome " + user.getName() + "!");
             } else {
-                flash.addFlashAttribute("success", "Punch-out logged correcty. Goodbye " + user.getName() + "!");
+                flash.addFlashAttribute("success", "Punch-out logged correcty. Goodbye " + user.getName() + "!" +
+                        "\nLast session: " + lastSessionHours + "h " + lastSessionMinutes + "min" +
+                        "\nTotal time: " + totalHours + "h " + totalMinutes + "min");
             }
 
         } catch (Exception e) {

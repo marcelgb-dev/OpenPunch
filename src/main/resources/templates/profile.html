@@ -18,7 +18,7 @@
                 Back
             </a>
 
-            <form sec:authorize="hasRole('ADMIN')" th:action="@{/users/edit}" method="post">
+            <form th:action="@{/users/edit}" method="post">
                 <input type="hidden" name="userId" th:value="${user.id}" />
                 <button type="submit" class="btn btn-primary">
                     <span class="material-symbols-outlined">edit</span>
@@ -114,33 +114,58 @@
     </div>
 
     <div class="logs-section">
-        <h3 style="color: #2c3e50; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 20px;">
-            Recent Activity Logs
-        </h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 20px;">
+            <h3>Work Sessions</h3>
+            <h3>Total worktime logged:
+                <span th:text="${#numbers.formatInteger(totalHours, 2) + 'h ' + #numbers.formatInteger(totalMinutes, 2) + 'min'}">45h 30min</span>
+            </h3>
+        </div>
+
 
         <table>
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Event</th>
-                <th>Date & Time</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Duration</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="log : ${logs}">
-                <td th:text="${log.id}">1</td>
-                <td>
-                            <span th:class="${log.event == 'IN'} ? 'status status-in' : 'status status-out'"
-                                  th:text="${log.event}">
-                                IN
-                            </span>
+            <tr th:each="ses : ${sessions}">
+                <td th:text="${ses.id}">1</td>
+
+                <td class="timestamp status-in"
+                    th:text="${#temporals.format(ses.startTime, 'dd/MM/yyyy - HH:mm:ss')}">
+                    15:00
                 </td>
-                <td class="timestamp" th:text="${#temporals.format(log.logTime, 'dd/MM/yyyy HH:mm:ss')}">
-                    20/04/2026 10:00:00
+
+                <td th:if="${ses.endTime != null}" class="timestamp status-out">
+                    <span th:text="${#temporals.format(ses.endTime, 'dd/MM/yyyy - HH:mm:ss')}">
+                        21:00
+                    </span>
+                </td>
+                <td th:if="${ses.endTime == null}">
+                    <span style="color: #95a5a6; font-style: italic;">
+                        --/--/-- - --:--:--
+                    </span>
+                </td>
+
+                <td>
+                    <th:block th:if="${ses.endTime != null}"
+                              th:with="hours=${ses.durationMinutes / 60}, mins=${ses.durationMinutes % 60}">
+                <span th:text="${#numbers.formatInteger(hours, 2) + 'h ' + #numbers.formatInteger(mins, 2) + 'min'}">
+                    07h 50m
+                </span>
+                    </th:block>
+                <span th:if="${ses.endTime == null}">
+                    Ongoing work session...
+                </span>
                 </td>
             </tr>
-            <tr th:if="${#lists.isEmpty(logs)}">
-                <td colspan="3" style="text-align: center; color: #95a5a6; padding: 30px;">
+
+            <tr th:if="${#lists.isEmpty(sessions)}">
+                <td colspan="4" style="text-align: center; color: #95a5a6; padding: 30px;">
                     No activity recorded for this user yet.
                 </td>
             </tr>

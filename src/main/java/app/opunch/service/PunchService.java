@@ -6,6 +6,7 @@ import app.opunch.model.WorkSession;
 import app.opunch.repository.PunchLogRepository;
 import app.opunch.repository.UserRepository;
 import app.opunch.repository.WorkSessionRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,13 @@ public class PunchService {
     private final UserRepository userRepo;
     private final PunchLogRepository logRepo;
     private final WorkSessionRepository wsRepo;
+
+    // Variables de entorno
+    @Value("${max.session.duration:480}")
+    private Integer maxSessionDuration;
+
+    @Value("${min.session.duration:5}")
+    private Integer minSessionDuration;
 
 
     // Constructor
@@ -76,20 +84,48 @@ public class PunchService {
         wsRepo.openSession(startLog.getUserId(), startLog.getId(), startLog.getLogTime());
     }
 
-    private void closeWorkSession (PunchLog endLog) throws RuntimeException {
+    private boolean closeWorkSession (PunchLog endLog) throws RuntimeException {
         System.out.println("Method closeWorkSession - Log ID:" + endLog.getId());
         Optional <WorkSession> optionalWs = wsRepo.findOpenSession(endLog.getUserId());
 
         if (optionalWs.isEmpty()) {
             System.err.println("WARNING: PunchService.closeWorkSession didn't find an open session for user " + endLog.getUserId());
-            return;
+            return false;
         }
 
         WorkSession ws = optionalWs.get();
-        ws.setEndTime(endLog.getLogTime());
-        ws.setDurationMinutes(ws.calculateDuration());
+        Integer wsId = ws.getId();
 
-        wsRepo.closeSession(ws.getId(), endLog.getId(), ws.getEndTime(), ws.getDurationMinutes());
+        ws.setEndTime(endLog.getLogTime());
+
+        Integer duration = ws.calculateDuration();
+
+        if (duration < minSessionDuration) {
+            System.out.println("Session " + wsId + " was shorter than MIN_SESSION_DURATION so it was automatically removed.");
+
+            try {
+                logRepo.remove(ws.getStartLogId());
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+            try {
+                wsRepo.removeSession(wsId);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        if (duration > maxSessionDuration) {
+            duration = maxSessionDuration;
+            System.out.println("WARNING: Session " + wsId + " was longer than " + maxSessionDuration + " so the duration was clamped to " + maxSessionDuration);
+        }
+
+        ws.setDurationMinutes(duration);
+
+        wsRepo.closeSession(wsId, endLog.getId(), ws.getEndTime(), ws.getDurationMinutes());
+        return true;
+
     }
 
     // Obtén todos los logs

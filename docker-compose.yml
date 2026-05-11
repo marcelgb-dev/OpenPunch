@@ -33,6 +33,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/openpunch?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=${TIMEZONE}
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=${DB_ROOT_PASSWORD}
+      - MAX_SESSION_DURATION=${MAX_SESSION_DURATION}
+      - MIN_SESSION_DURATION=${MIN_SESSION_DURATION}
     networks:
       - backend-private
   # --- Proxy Inverso (Nginx) ---

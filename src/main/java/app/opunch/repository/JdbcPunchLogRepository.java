@@ -79,4 +79,9 @@ public class JdbcPunchLogRepository implements PunchLogRepository {
         jdbc.update(sql, log.getUserId(), log.getEvent());
     }
 
+    @Override
+    public void remove(Integer punchLogId) {
+        jdbc.update("DELETE FROM punch_logs WHERE id = ?", punchLogId);
+    }
+
 }

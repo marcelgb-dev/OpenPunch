@@ -71,6 +71,19 @@ public class JdbcWorkSessionRepository implements WorkSessionRepository {
     }
 
     @Override
+    public Optional<WorkSession> findLastSession(Integer userId) {
+        String sql = """
+                    SELECT * FROM view_work_sessions 
+                    WHERE user_id = ?
+                    ORDER BY end_time DESC
+                    LIMIT 1
+                    """;
+
+        List<WorkSession> results = jdbc.query(sql, workSessionViewRowMapper, userId);
+        return returnOptional(results);
+    }
+
+    @Override
     public Optional<WorkSession> findOpenSession(Integer userId) {
         String sql = """
                     SELECT * FROM view_work_sessions 
@@ -107,5 +120,11 @@ public class JdbcWorkSessionRepository implements WorkSessionRepository {
 
         jdbc.update(sql, endLogId, endTime, durationMinutes, workSessionId);
     }
+
+    @Override
+    public void removeSession(Integer sessionId) {
+        jdbc.update("DELETE FROM work_sessions WHERE id = ?", sessionId);
+    }
+
 
 }

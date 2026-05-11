@@ -2,8 +2,10 @@ package app.opunch.controller;
 
 import app.opunch.model.PunchLog;
 import app.opunch.model.User;
+import app.opunch.model.WorkSession;
 import app.opunch.service.PunchService;
 import app.opunch.service.UserService;
+import app.opunch.service.WorkSessionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,12 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final PunchService punchService;
+    private final WorkSessionService sessionService;
 
-    public UserController(UserService userService, PunchService punchService) {
+    public UserController(UserService userService, PunchService punchService, WorkSessionService sessionService) {
         this.userService = userService;
         this.punchService = punchService;
+        this.sessionService = sessionService;
     }
 
     @GetMapping("/users")
@@ -34,8 +38,16 @@ public class UserController {
         User user = userService.getUser(userId);
         model.addAttribute("user", user);
 
-        List<PunchLog> userLogs = punchService.getAllFromUser(userId);
-        model.addAttribute("logs", userLogs);
+        //List<PunchLog> userLogs = punchService.getAllFromUser(userId);
+
+        List<WorkSession> userSessions = sessionService.getAllFromUser(userId);
+        Integer [] totalTime = sessionService.totalTime(userSessions);
+
+        //model.addAttribute("logs", userLogs);
+
+        model.addAttribute("sessions", userSessions);
+        model.addAttribute("totalHours", totalTime[0]);
+        model.addAttribute("totalMinutes", totalTime[1]);
 
         model.addAttribute("now", LocalDateTime.now());
 
@@ -77,12 +89,11 @@ public class UserController {
     public String updateUser(@ModelAttribute("user") User user) {
 
         System.out.println("Update petition received");
-        System.out.println("User password after saving: " + user.getPassword());
         // Guardamos en la base de datos
         userService.updateUser(user);
 
-        // edirigimos a la lista de usuarios
-        return "redirect:/users";
+        // Redirigimos a la lista de usuarios
+        return "redirect:/profile/" + user.getId();
     }
 
     @PostMapping("/users/delete")
