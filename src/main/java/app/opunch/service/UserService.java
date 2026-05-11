@@ -60,9 +60,12 @@ public class UserService {
 
     // Returns a NanoID with default number and alphabet of 10 characters long
     public String newToken() {
+
+        String alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         return NanoIdUtils.randomNanoId(
                 NanoIdUtils.DEFAULT_NUMBER_GENERATOR,
-                NanoIdUtils.DEFAULT_ALPHABET,
+                alphabet.toCharArray(),
                 10
         );
     }
