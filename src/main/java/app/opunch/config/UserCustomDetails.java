@@ -29,7 +29,7 @@ public class UserCustomDetails implements UserDetails {
 
     /**
      * Retorna el ID para redirecciones dinámicas en el SuccessHandler.
-     * Requisito para: /users/profile/{id}
+     * Requisito para: /profile/{id}
      */
     public Integer getId() {
         return this.id;

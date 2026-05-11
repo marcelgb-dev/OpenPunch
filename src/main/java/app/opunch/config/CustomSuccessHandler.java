@@ -27,7 +27,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         } else if (roles.contains("ROLE_USER")) {
             Object principal = authentication.getPrincipal();
             if (principal instanceof UserCustomDetails details) {
-                response.sendRedirect("/users/profile/" + details.getId());
+                response.sendRedirect("/profile/" + details.getId());
             } else {
                 // Si el principal no es de nuestro tipo personalizado, algo va mal
                 response.sendRedirect("/login?error=auth_error");

@@ -18,6 +18,14 @@
                 Back
             </a>
 
+            <form sec:authorize="hasRole('ADMIN')" th:action="@{/users/edit}" method="post">
+                <input type="hidden" name="userId" th:value="${user.id}" />
+                <button type="submit" class="btn btn-primary">
+                    <span class="material-symbols-outlined">edit</span>
+                    Edit User
+                </button>
+            </form>
+
             <form sec:authorize="hasRole('ADMIN')" th:action="@{/users/delete}" method="post">
                 <input type="hidden" name="userId" th:value="${user.id}" />
                 <button type="submit" class="btn btn-logout"
@@ -53,7 +61,7 @@
             <div class="form-group">
                 <label>Current Status</label>
                 <div style="margin-top: 5px;">
-                    <div th:class="${user.active} ? 'status status-in' : 'status status-out'" style="font-size:14px;">
+                    <div th:class="${user.active} ? 'status status-in' : 'status status-out'" style="font-size:14px; padding:10px;">
                         <span th:text="${user.active} ? 'Active' : 'Inactive'"></span>
 
                         <span th:if="${user.lastLog != null and user.lastLog.logTime != null}">

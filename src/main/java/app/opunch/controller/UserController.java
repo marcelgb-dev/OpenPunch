@@ -28,7 +28,7 @@ public class UserController {
     }
 
     // /users/id
-    @GetMapping("/users/profile/{userId}")
+    @GetMapping("/profile/{userId}")
     public String showProfile(@PathVariable Integer userId, Model model) {
 
         User user = userService.getUser(userId);
