@@ -12,6 +12,7 @@ public interface UserRepository extends BaseRepository {
     List<User> findByRole(Integer role);
 
     Optional<User> findById(Integer id);
+    Optional<User> findByIdFull(Integer id);
     Optional<User> findByToken(String token);
     Optional<User> findByUsername(String username);
 

@@ -46,6 +46,18 @@ public class UserService {
         return optionalUser.get();
     }
 
+    public User getFullUser(Integer id) {
+        Optional<User> optionalUser = userRepo.findByIdFull(id);
+
+        if (optionalUser.isEmpty())
+        {
+            System.out.println("The requested ID (" + id + ") does not belong to any current user");
+            return null;
+        }
+
+        return optionalUser.get();
+    }
+
     // Returns a NanoID with default number and alphabet of 10 characters long
     public String newToken() {
         return NanoIdUtils.randomNanoId(
@@ -77,6 +89,15 @@ public class UserService {
             System.out.println("User with ID " + user.getId() + " does not exist in the database.");
             return;
         }
+
+        // Password encoding with BCrypt
+        String rawPassword = user.getPassword();
+        String newPassword = null;
+        if (!rawPassword.isBlank()) {
+            newPassword = encoder.encode(rawPassword);
+        }
+
+        user.setPassword(newPassword);
 
         // Updates the user fields with save()
         userRepo.save(user);

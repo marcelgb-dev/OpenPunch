@@ -117,6 +117,17 @@ public class JdbcUserRepository implements UserRepository {
         return returnOptional(results);
     }
 
+    // Select the status data and last log from a specific user by their id
+    @Override
+    public Optional<User> findByIdFull(Integer id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+
+        List<User> results = jdbc.query(sql, userRowMapper, id);
+
+        return returnOptional(results);
+    }
+
+
     // Select the status data and last log from a specific user by their token
     @Override
     public Optional<User> findByToken(String token) {
@@ -159,7 +170,7 @@ public class JdbcUserRepository implements UserRepository {
                     """;
             jdbc.update(sql, token, username, password, role, name, surname);
         }
-        else {
+        else if (password != null) {
             sql = """
                     UPDATE users 
                     SET token = ?, username = ?, password = ?, role = ?, name = ?, surname = ?
@@ -167,6 +178,15 @@ public class JdbcUserRepository implements UserRepository {
                     """;
 
             jdbc.update(sql, token, username, password, role, name, surname, id);
+        }
+        else {
+            sql = """
+                    UPDATE users 
+                    SET token = ?, username = ?, role = ?, name = ?, surname = ?
+                    WHERE id = ?
+                    """;
+
+            jdbc.update(sql, token, username, role, name, surname, id);
         }
     }
 

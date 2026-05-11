@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Openpunch - User Panel</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
 
@@ -63,15 +64,20 @@
                         Punch
                     </a>
 
-                    <a th:href="@{/users/profile/{id}(id=${user.id})}"
-                       class="btn btn-outline">
-                        Profile
+                    <a th:href="@{/users/profile/{id}(id=${user.id})}" class="btn btn-outline">
+                        <span class="material-symbols-outlined">contact_page</span>
                     </a>
+                    <form th:action="@{/users/edit}" method="post">
+                        <input type="hidden" name="userId" th:value="${user.id}" />
+                        <button type="submit" class="btn btn-outline">
+                            Edit
+                        </button>
+                    </form>
                     <form th:action="@{/users/delete}" method="post">
                         <input type="hidden" name="userId" th:value="${user.id}" />
                         <button type="submit" class="btn btn-logout"
                                 th:onclick="return confirm('Are you sure? This will remove all Work Sessions, Punch Logs and User details of ' + [[${user.name}]] + '.');">
-                            Delete
+                            <span class="material-symbols-outlined">delete</span>
                         </button>
                     </form>
                 </div>

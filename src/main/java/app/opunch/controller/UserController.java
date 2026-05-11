@@ -52,11 +52,34 @@ public class UserController {
         return "userform";
     }
 
+    @PostMapping("/users/edit")
+    public String showEditForm(@RequestParam("userId") Integer userId, Model model) {
+
+        User editUser = userService.getFullUser(userId);
+
+        editUser.setPassword("");
+
+        model.addAttribute("user", editUser);
+        return "useredit";
+    }
+
     @PostMapping("/users/save")
     public String saveUser(@ModelAttribute("user") User user) {
 
         // Guardamos en la base de datos
         userService.createUser(user);
+
+        // edirigimos a la lista de usuarios
+        return "redirect:/users";
+    }
+
+    @PostMapping("/users/update")
+    public String updateUser(@ModelAttribute("user") User user) {
+
+        System.out.println("Update petition received");
+        System.out.println("User password after saving: " + user.getPassword());
+        // Guardamos en la base de datos
+        userService.updateUser(user);
 
         // edirigimos a la lista de usuarios
         return "redirect:/users";
