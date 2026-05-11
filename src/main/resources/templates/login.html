@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>OpenPunch - Access System</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
 </head>
-<body class="login-page"> <!-- Clase añadida para el fondo especial -->
+<body class="login-page">
 <main class="login-wrapper">
     <div class="login-card">
         <div class="login-header">
-            <h1>OpenPunch</h1>
-            <p>Attendance Control System</p>
+            <h1>IES La Sènia</h1>
+            <p>Attendance Tracking System</p>
         </div>
 
         <form th:action="@{/login}" method="post" class="user-form">
-            <h2>System Access</h2>
-
             <!-- Mensajes de error con estilo de alerta del CSS -->
             <div th:if="${param.error}" class="alert alert-danger">
                 <span>Invalid credentials.</span>

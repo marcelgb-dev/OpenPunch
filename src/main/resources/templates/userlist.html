@@ -12,11 +12,22 @@
     <header>
         <h1>User List</h1>
         <div class="header-actions">
-            <form th:action="@{/logout}" method="post" style="display: inline;">
-                <button type="submit" class="btn btn-logout">Log Out</button>
+            <a href="/users/new" class="btn btn-primary">
+                <span class="material-symbols-outlined">person_add</span>
+                Add User
+            </a>
+
+            <a href="/dashboard" class="btn btn-primary">
+                <span class="material-symbols-outlined">history</span>
+                Log History
+            </a>
+
+            <form th:action="@{/logout}" method="post" style="display: contents;">
+                <button type="submit" class="btn btn-logout">
+                    <span class="material-symbols-outlined">logout</span>
+                    Log Out
+                </button>
             </form>
-            <a href="/dashboard" class="btn btn-outline">See Log History</a>
-            <a href="/users/new" class="btn btn-primary">+ Add User</a>
         </div>
 
     </header>
@@ -59,18 +70,17 @@
             <td>
                 <div style="display: flex; gap: 8px;">
                     <a th:href="@{/punch(token=${user.token})}"
-                       class="btn btn-primary"
-                       style="background-color: #27ae60; border: none;">
+                       class="btn btn-punch">
                         Punch
                     </a>
 
-                    <a th:href="@{/users/profile/{id}(id=${user.id})}" class="btn btn-outline">
-                        <span class="material-symbols-outlined">contact_page</span>
+                    <a th:href="@{/users/profile/{id}(id=${user.id})}" class="btn btn-primary">
+                        <span class="material-symbols-outlined">visibility</span>
                     </a>
                     <form th:action="@{/users/edit}" method="post">
                         <input type="hidden" name="userId" th:value="${user.id}" />
-                        <button type="submit" class="btn btn-outline">
-                            Edit
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined">edit</span>
                         </button>
                     </form>
                     <form th:action="@{/users/delete}" method="post">

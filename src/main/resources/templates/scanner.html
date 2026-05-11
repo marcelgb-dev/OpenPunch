@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>OpenPunch | Scanner</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
 </head>
 <body>
 <div class="container">
     <header>
         <h1>Punch Station</h1>
-        <form th:action="@{/logout}" method="post" style="display: inline;">
-            <button type="submit" class="btn btn-logout">Log Out</button>
+        <form th:action="@{/logout}" method="post" style="display: contents;">
+            <button type="submit" class="btn btn-logout">
+                <span class="material-symbols-outlined">logout</span>
+                Log Out
+            </button>
         </form>
     </header>
 
@@ -23,17 +28,6 @@
         </div>
     </div>
 
-<!--    <div class="scanner-card">-->
-<!--        <h3>Scan QR Code</h3>-->
-
-<!--        <div id="loading-message" class="scanner-notice">-->
-<!--            <div class="spinner"></div>-->
-<!--            <p>Initializing camera in 3 seconds...</p>-->
-<!--        </div>-->
-
-<!--        <div id="reader"></div>-->
-
-<!--    </div>-->
     <div class="manual-input-container">
         <p>Ready for Barcode or Manual Entry</p>
         <form th:action="@{/punch}" method="get" id="punch-form">
@@ -41,10 +35,10 @@
                    name="token"
                    class="barcode-input"
                    id="barcode-input"
-                   placeholder="Click & Scan..."
+                   placeholder="Scan or Type..."
                    autocomplete="off"
                    autofocus>
-            <button type="submit" class="btn btn-primary" style="background-color: #27ae60; border: none;">Punch</button>
+            <button type="submit" class="btn btn-punch" >Punch</button>
         </form>
     </div>
 </div>

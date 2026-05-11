@@ -3,16 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>OpenPunch | Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
 </head>
 <body>
 <div class="container">
     <header>
         <h1>Log History</h1>
-        <a href="/users" class="btn btn-outline">See Users</a>
-        <form th:action="@{/logout}" method="post" style="display: inline;">
-            <button type="submit" class="btn btn-logout">Log Out</button>
-        </form>
+        <div  class="header-actions">
+            <a href="/users" class="btn btn-primary">
+                <span class="material-symbols-outlined">group</span>
+                User List
+            </a>
+            <form th:action="@{/logout}" method="post" style="display: contents;">
+                <button type="submit" class="btn btn-logout">
+                    <span class="material-symbols-outlined">logout</span>
+                    Log Out
+                </button>
+            </form>
+        </div>
+
     </header>
 
     <table>

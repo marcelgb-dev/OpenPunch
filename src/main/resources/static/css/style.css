@@ -1,19 +1,37 @@
-/* --- BASE Y LAYOUT --- */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f7f6;
-    padding: 40px;
-    color: #333;
-    margin: 0;
+/* * OPENPUNCH - Unified Design System
+ * Refactored for consistency and maintainability
+ */
+
+/* --- 1. VARIABLES & RESET --- */
+:root {
+    --primary: #3498db;
+    --primary-dark: #2980b9;
+    --success: #28a745;
+    --danger: #e74c3c;
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+    --bg-body: #f4f7f6;
+    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+    --radius: 8px;
 }
 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    margin: 0;
+    padding: 40px;
+    line-height: 1.6;
+}
+
+/* --- 2. LAYOUT COMPONENTS --- */
 .container {
     max-width: 1000px;
     margin: auto;
     background: white;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: var(--shadow);
 }
 
 header {
@@ -27,19 +45,17 @@ header {
 
 .header-actions {
     display: flex;
-    gap: 12px; /* Espacio entre los dos botones */
+    gap: 12px;
     align-items: center;
 }
 
-h1 {
-    color: #2c3e50;
-    margin: 0;
-}
+/* --- 3. TYPOGRAPHY & TABLES --- */
+h1, h2, h3 { color: var(--text-main); margin: 0; }
 
-/* --- TABLAS --- */
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
 th, td {
@@ -50,72 +66,59 @@ th, td {
 
 th {
     background: #f8f9fa;
-    color: #7f8c8d;
+    color: var(--text-muted);
     text-transform: uppercase;
-    font-size: 0.85em;
+    font-size: 0.75rem;
     letter-spacing: 1px;
 }
 
-tr:hover {
-    background-color: #fcfdfe;
-}
+tr:hover { background-color: #fcfdfe; }
 
-/* --- COMPONENTES (Botones y Estados) --- */
+/* --- 4. UNIFIED BUTTONS --- */
 .btn {
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: var(--radius);
     font-size: 0.9rem;
-    display: inline-block;
-    transition: all 0.2s;
-    font-weight: 500;
-}
-
-.btn:hover {
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
     cursor: pointer;
+    gap: 8px;
+
+    height: 42px;          /* Altura fija para asegurar simetría total */
+    box-sizing: border-box; /* Incluye padding/border en el cálculo de altura */
+    border: 2px solid transparent;
+    vertical-align: middle;
+    line-height: 1;        /* Evita que la altura de línea de los enlaces los estire */
+    font-family: inherit;
 }
 
-.btn-primary {
-    background-color: #3498db;
-    color: white;
-}
+.btn:active { transform: scale(0.98); }
 
-.btn-outline {
-    border: 1px solid #3498db;
-    color: #3498db;
-}
+/* Variants */
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
 
-.btn-outline:hover {
-    background-color: #3498db;
-    color: white;
-}
+.btn-punch {background: #27ae60; color:white;}
+.btn-punch:hover {background: #417b58; color:white;}
 
-/* Badges de Estado */
-.status {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75em;
-    font-weight: bold;
-    display: inline-block;
-    text-align: center;
-    min-width: 60px;
-}
+.btn-outline { border-color: var(--primary); color: var(--primary); background: transparent; }
+.btn-outline:hover { background: var(--primary); color: white; }
 
-.status-in {
-    background: #e1f7e7;
-    color: #1db954;
-}
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #c0392b; opacity: 0.9; }
 
-.status-out {
-    background: #ffe5e5;
-    color: #eb5757;
-}
+.btn-logout { background: var(--danger); color: white;}
+.btn-logout:hover { background: #c0392b; color: white; }
 
-.timestamp {
-    color: #95a5a6;
-    font-family: monospace;
-    font-size: 0.9em;
-}
+.btn-block { width: 100%; }
+
+/* --- 5. FORMS & INPUTS --- */
+.user-form .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; }
 
 /* Estilos específicos del formulario */
 .user-form {
@@ -162,115 +165,26 @@ tr:hover {
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
-/* Contenedor para las alertas */
-.alert-container {
-    width: 90%;
-    max-width: 1000px; /* Alineado con el ancho de tu tarjeta de lista */
-    margin: 10px auto;
+.form-row { display: flex; gap: 20px; margin-bottom: 1rem; }
+.form-row .form-group { flex: 1; }
+
+label { font-weight: 600; margin-bottom: 6px; font-size: 0.85rem; color: #444; }
+
+input, select {
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    transition: border-color 0.2s;
 }
 
-/* Estilo base de la alerta */
-.alert {
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    font-family: sans-serif;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    animation: slideIn 0.3s ease-out;
+input:focus, select:focus {
+    border-color: var(--primary);
+    outline: none;
+    background: #fff;
 }
 
-/* Éxito: Verde (Como tus botones de Punch) */
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-left: 5px solid #28a745; /* El verde de tus botones */
-}
-
-/* Error: Rojo */
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    border-left: 5px solid #dc3545;
-}
-
-/* Botón de cerrar manual */
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: inherit;
-    opacity: 0.5;
-}
-
-.close-btn:hover {
-    opacity: 1;
-}
-
-/* Animación */
-@keyframes slideIn {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* --- SCANNER CARD --- */
-.scanner-card {
-    max-width: 600px;
-    margin: 20px auto;
-    text-align: center;
-    background: white;
-    /*padding: 30px;
-    border: 1px solid #eee;
-    border-radius: 12px;*/
-}
-
-/* Limpieza de la librería QR */
-#reader {
-    border: none !important;
-}
-
-#reader video {
-    /* Fuerza a que el video ocupe el ancho disponible sin deformarse */
-    width: 100% !important;
-    height: auto !important;
-}
-
-#reader img,
-#reader__camera_permission_button,
-#reader__dashboard_section_swaplink,
-#reader__status_span,
-#reader__dashboard_section_csr {
-    display: none !important;
-}
-
-/* --- LOADING STATE --- */
-.scanner-notice {
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 15px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+/* --- 6. SCANNER & ALERTS --- */
 
 /* --- MANUAL INPUT (Corregido y Centrado) --- */
 .manual-input-container {
@@ -289,15 +203,19 @@ tr:hover {
     display: block; /* Ocupa todo el ancho para centrarse bien */
 }
 
+
 #punch-form {
     display: flex;
     justify-content: center; /* Centra el input y el botón horizontalmente */
     gap: 10px;
+
+    flex-direction: row;
+    align-items: center;
 }
 
 .barcode-input {
     flex: 1;
-    max-width: 300px;
+    display: block;
     padding: 12px 15px;
     border: 2px solid #eee;
     border-radius: 8px;
@@ -306,43 +224,53 @@ tr:hover {
     letter-spacing: 1px;
     transition: all 0.2s;
     background-color: #fcfcfc;
+
+    max-width: 400px;
+    width:100%
 }
 
 .barcode-input:focus {
-    border-color: #3498db;
-    background-color: #fff;
+    border-color: var(--primary);
+    background-color: white;
     outline: none;
     box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
 }
 
-#punch-form .btn-primary {
+#punch-form .btn-punch {
     padding: 0 25px;
     height: 48px; /* Alineado con la altura del input */
     font-size: 1rem;
     border-radius: 8px;
+    max-width: 150px;
 }
 
-/* --- LOGIN PAGE SPECIFIC --- */
+.alert-container { max-width: 1000px; margin: 0 auto 20px; }
+
+.alert {
+    padding: 15px 20px;
+    border-radius: var(--radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid;
+    animation: slideIn 0.3s ease-out;
+}
+
+.alert-success { background: #eef9f1; color: #1e4620; border-left-color: var(--success); }
+.alert-danger { background: #fff5f5; color: #842029; border-left-color: var(--danger); }
+
+/* QR Scanner specific cleaning */
+#reader { border: none !important; }
+#reader video { width: 100% !important; border-radius: 12px; }
+#reader__camera_permission_button, #reader__status_span { display: none !important; }
+
+/* --- 7. LOGIN PAGE --- */
 .login-page {
     background: linear-gradient(135deg, #f4f7f6 0%, #e1f0fa 100%);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-}
-
-.login-wrapper {
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-}
-
-.login-card {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
 .login-header {
@@ -350,46 +278,52 @@ tr:hover {
     margin-bottom: 30px;
 }
 
+
 .login-header h1 {
-    color: #3498db;
+    color: var(--primary);
     font-size: 2rem;
     margin-bottom: 5px;
 }
 
 .login-header p {
-    color: #7f8c8d;
+    color: var(--text-muted);
     margin: 0;
     font-size: 0.9rem;
-}
-
-.btn-block {
-    width: 100%;
-    padding: 12px !important;
-    margin-top: 10px;
-    font-size: 1rem !important;
 }
 
 .login-footer {
     margin-top: 30px;
     text-align: center;
-    color: #bdc3c7;
+    color: var(--text-muted);
 }
 
-/* Ajuste para el mensaje de error en el login */
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 380px;
+}
 .login-card .alert {
     padding: 10px 15px;
     font-size: 13px;
     margin-bottom: 20px;
 }
 
-/* Añadir al final de style.css */
-.btn-logout {
-    background-color: #e74c3c;
-    color: white;
+/* --- 8. UTILS & ANIMATIONS --- */
+.status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
-.btn-logout:hover {
-    background-color: white;
-    border-color: #e74c3c; /* Color rojo suave para "salir" */
-    color: #e74c3c;
+.status-in { background: #e1f7e7; color: var(--success); }
+.status-out { background: #ffe5e5; color: var(--danger); }
+
+@keyframes slideIn {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

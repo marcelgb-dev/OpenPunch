@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Nuevo Usuario - oPunch</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
 
 <div class="container" style="max-width: 600px;">
   <header>
     <h1>New User</h1>
-    <a href="/users" class="btn btn-outline">Go Back</a>
+    <a href="/users" class="btn btn-primary">
+      <span class="material-symbols-outlined">keyboard_return</span>
+      Back
+    </a>
   </header>
 
   <form th:action="@{/users/save}" th:object="${user}" method="post" class="user-form">
@@ -26,19 +30,7 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Role</label>
-        <select th:field="*{role}" required>
-          <option value="" disabled>Select a role</option>
-          <option value="1">Admin</option>
-          <option value="2">Scanner</option>
-          <option value="3" selected>User</option>
-        </select>
-      </div>
-    </div>
-
-    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+    <hr style="margin: 20px 0; border: 1px solid #eee;">
 
     <div class="form-group">
       <label>Username</label>
@@ -50,9 +42,20 @@
       <input type="password" th:field="*{password}" required placeholder="••••••••">
     </div>
 
-    <div class="form-group">
-      <label>Token</label>
-      <input type="text" th:field="*{token}" placeholder="Leave empty to autogenerate">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Role</label>
+        <select th:field="*{role}" required>
+          <option value="" disabled>Select a role</option>
+          <option value="1">Admin</option>
+          <option value="2">Scanner</option>
+          <option value="3" selected>User</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Token</label>
+        <input type="text" th:field="*{token}" placeholder="Leave empty to autogenerate">
+      </div>
     </div>
 
     <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 20px; padding: 12px;">
