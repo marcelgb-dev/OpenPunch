@@ -29,6 +29,7 @@
     <table>
         <thead>
         <tr>
+            <th>Log ID</th>
             <th>Name</th>
             <th class="cell-center">Action</th>
             <th>Date & Time</th>
@@ -36,7 +37,8 @@
         </thead>
         <tbody>
         <tr th:each="log : ${logs}">
-            <td style="font-weight: 600;" th:text="${log.user.name + ' ' + log.user.surname}">Nombre Apellido</td>
+            <td th:text="${'#' + log.id}">Log ID</td>
+            <td th:text="${log.user.name + ' ' + log.user.surname}">Nombre Apellido</td>
             <td class="cell-center">
                         <span th:text="${log.event}"
                               th:class="${log.event == 'IN' ? 'status status-in' : 'status status-out'}">

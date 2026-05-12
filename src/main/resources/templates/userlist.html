@@ -45,7 +45,7 @@
     <table>
         <thead>
         <tr>
-            <th>ID</th>
+            <th>User ID</th>
             <th>Name</th>
             <th>Status</th>
             <th>Last Punch</th>
@@ -54,11 +54,11 @@
         </thead>
         <tbody>
         <tr th:each="user : ${users}">
-            <td th:text="${user.id}">1</td>
-            <td style="font-weight: 600;" th:text="${user.name + ' ' + user.surname}">Nombre y Apellido</td>
+            <td th:text="${'#' + user.id}">1</td>
+            <td th:text="${user.name + ' ' + user.surname}">Nombre y Apellido</td>
             <td>
                     <span th:if="${user.lastLog != null}"
-                          th:text="${user.lastLog.event}"
+                          th:text="${user.lastLog.event == 'IN'} ? 'Active' : 'Inactive'"
                           th:classappend="${user.lastLog.event == 'IN'} ? 'status status-in' : 'status status-out'">
                     </span>
                 <span th:unless="${user.lastLog != null}" class="timestamp">---</span>
