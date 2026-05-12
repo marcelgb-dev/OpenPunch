@@ -24,11 +24,11 @@
         <div class="form-row">
             <div class="form-group">
                 <label>Name</label>
-                <input type="text" th:field="*{name}" required th:readonly="${!#authorization.expression('hasRole(''ADMIN'')')}">
+                <input type="text" th:field="*{name}" maxlength="50" required th:readonly="${!#authorization.expression('hasRole(''ADMIN'')')}">
             </div>
             <div class="form-group">
                 <label>Surname</label>
-                <input type="text" th:field="*{surname}" th:readonly="${!#authorization.expression('hasRole(''ADMIN'')')}">
+                <input type="text" th:field="*{surname}" maxlength="100" th:readonly="${!#authorization.expression('hasRole(''ADMIN'')')}">
             </div>
         </div>
 
@@ -36,12 +36,12 @@
 
         <div class="form-group">
             <label>Username</label>
-            <input type="text" th:field="*{username}" required>
+            <input type="text" th:field="*{username}" maxlength="50" required>
         </div>
 
         <div class="form-group">
             <label>New Password</label>
-            <input type="password" th:field="*{password}" placeholder="Leave empty to keep the previous password">
+            <input type="password" th:field="*{password}" maxlength="255" placeholder="Leave empty to keep the previous password">
         </div>
 
         <div class="form-row">
@@ -58,7 +58,7 @@
             </div>
             <div class="form-group">
                 <label>Token</label>
-                <input type="text" th:field="*{token}" th:readonly="${!#authorization.expression('hasRole(''ADMIN'')')}">
+                <input type="text" th:field="*{token}" maxlength="10" th:readonly="${!#authorization.expression('hasRole(''ADMIN'')')}">
             </div>
         </div>
 
