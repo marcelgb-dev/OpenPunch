@@ -154,13 +154,13 @@
                 <td>
                     <th:block th:if="${ses.endTime != null}"
                               th:with="hours=${ses.durationMinutes / 60}, mins=${ses.durationMinutes % 60}">
-                <span th:text="${#numbers.formatInteger(hours, 2) + 'h ' + #numbers.formatInteger(mins, 2) + 'min'}">
-                    07h 50m
-                </span>
+                        <span th:text="${#numbers.formatInteger(hours, 2) + 'h ' + #numbers.formatInteger(mins, 2) + 'min'}">
+                            07h 50m
+                        </span>
                     </th:block>
-                <span th:if="${ses.endTime == null}">
-                    Ongoing work session...
-                </span>
+                    <span th:if="${ses.endTime == null}">
+                        Ongoing work session...
+                    </span>
                 </td>
             </tr>
 

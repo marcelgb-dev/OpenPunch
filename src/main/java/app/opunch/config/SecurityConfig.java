@@ -28,7 +28,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/setup/**").permitAll() // Recursos estáticos
-                        .requestMatchers("/admin/**", "/dashboard", "/users", "/users/delete", "/users/new", "/users/save").hasRole("ADMIN") // Solo administradores
+                        .requestMatchers("/admin/**", "/log_history", "/users", "/users/delete", "/users/new", "/users/save").hasRole("ADMIN") // Solo administradores
                         .requestMatchers("/scanner/**").hasRole("SCANNER") // Estación de fichaje
                         .anyRequest().authenticated() // El resto requiere login
                 )

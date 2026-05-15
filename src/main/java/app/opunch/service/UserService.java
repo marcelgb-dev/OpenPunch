@@ -1,6 +1,8 @@
 package app.opunch.service;
 
 import app.opunch.model.User;
+import app.opunch.dto.PrintableUserDTO;
+import app.opunch.model.WorkSession;
 import app.opunch.repository.UserRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +18,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepo;
+    private final WorkSessionService wsService;
     private final PasswordEncoder encoder;
 
-    public UserService(UserRepository userRepo, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepo, WorkSessionService wsService, PasswordEncoder encoder) {
         this.userRepo = userRepo;
+        this.wsService = wsService;
         this.encoder = encoder;
     }
 
@@ -56,6 +61,33 @@ public class UserService {
         }
 
         return optionalUser.get();
+    }
+
+    public PrintableUserDTO getPrintableUser(Integer id) {
+        User user = getFullUser(id);
+        List<WorkSession> sessions = wsService.getAllFromUser(id);
+        Integer [] totalTime = wsService.totalTime(sessions);
+
+        return new PrintableUserDTO(
+                id,
+                user.getName(),
+                user.getSurname(),
+                sessions,
+                totalTime[0],
+                totalTime[1]);
+    }
+
+    public List<PrintableUserDTO> getAllPrintableUsers() {
+        List<PrintableUserDTO> printableUserList = new ArrayList<PrintableUserDTO>();
+
+        List<User> users = getUsersByRole(3);
+
+        for (User u : users) {
+            PrintableUserDTO printableUser = getPrintableUser(u.getId());
+            printableUserList.add(printableUser);
+        }
+
+        return printableUserList;
     }
 
     // Returns a NanoID with default number and alphabet of 10 characters long

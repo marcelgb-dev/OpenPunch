@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenPunch | Work Sessions</title>
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        /* Estilos específicos para el desplegable que complementan tu style.css */
+        .user-accordion {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        summary {
+            list-style: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }
+
+        summary:hover {
+            background-color: #f9f9f9;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .total-badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sessions-content {
+            border-top: 1px solid #eee;
+            padding: 0;
+            background-color: #fafafa;
+        }
+
+        .sessions-table {
+            margin: 0;
+            width: 100%;
+            border-radius: 0;
+            border: none;
+        }
+
+        .sessions-table th {
+            background-color: #f1f1f1;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+            color: #999;
+        }
+
+        details[open] .toggle-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Work Sessions</h1>
+        <div class="header-actions">
+            <a th:href="@{/logs}" class="btn btn-primary">
+                <span class="material-symbols-outlined">history</span>
+                Logs
+            </a>
+            <a th:href="@{/users}" class="btn btn-primary">
+                <span class="material-symbols-outlined">group</span>
+                User List
+            </a>
+        </div>
+    </header>
+
+    <div th:each="user : ${users}" class="user-accordion">
+        <details>
+            <summary>
+                <div class="user-info">
+                    <span class="material-symbols-outlined" style="color: #666;">account_circle</span>
+                    <span class="user-name" th:text="${user.name + ' ' + user.surname}">Nombre Apellido</span>
+
+                    <div class="total-badge">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">schedule</span>
+                        <span th:text="${user.totalHours + 'h ' + user.totalMinutes + 'm'}">0h 0m</span>
+                    </div>
+                </div>
+                <span class="material-symbols-outlined toggle-icon">expand_more</span>
+            </summary>
+
+            <div class="sessions-content">
+                <table class="sessions-table">
+                    <thead>
+                    <tr>
+                        <th>Start Session</th>
+                        <th>End Session</th>
+                        <th class="cell-center">Duration</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ses : ${user.sessions}">
+                        <td class="timestamp status-in" th:text="${#temporals.format(ses.startTime, 'dd/MM/yyyy HH:mm:ss')}">
+                            01/01/2026 09:00:00
+                        </td>
+                        <td th:if="${ses.endTime != null}" class="timestamp status-out">
+                            <span th:text="${#temporals.format(ses.endTime, 'dd/MM/yyyy - HH:mm:ss')}">
+                                21:00
+                            </span>
+                        </td>
+                        <td th:if="${ses.endTime == null}">
+                            <span style="color: #95a5a6; font-style: italic;">
+                                --/--/-- - --:--:--
+                            </span>
+                        </td>
+                        <td>
+                            <th:block th:if="${ses.endTime != null}" th:with="hours=${ses.durationMinutes / 60}, mins=${ses.durationMinutes % 60}">
+                                <span th:text="${#numbers.formatInteger(hours, 2) + 'h ' + #numbers.formatInteger(mins, 2) + 'min'}">
+                                    07h 50m
+                                </span>
+                            </th:block>
+                                <span th:if="${ses.endTime == null}">
+                                    Ongoing work session...
+                                </span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(user.sessions)}">
+                        <td colspan="3" class="cell-center" style="padding: 20px; color: #999;">
+                            No work sessions recorded for this user.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </details>
+    </div>
+
+</div>
+</body>
+</html>
