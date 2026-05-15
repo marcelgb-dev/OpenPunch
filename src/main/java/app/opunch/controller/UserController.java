@@ -1,14 +1,18 @@
 package app.opunch.controller;
 
+import app.opunch.config.UserCustomDetails;
 import app.opunch.model.PunchLog;
 import app.opunch.model.User;
 import app.opunch.model.WorkSession;
 import app.opunch.service.PunchService;
 import app.opunch.service.UserService;
 import app.opunch.service.WorkSessionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -86,14 +90,41 @@ public class UserController {
     }
 
     @PostMapping("/users/update")
-    public String updateUser(@ModelAttribute("user") User user) {
+    public String updateUser(@ModelAttribute("user") User clientUser, Authentication authentication) {
+
+        // 1. Obtener los detalles del usuario logueado
+        UserCustomDetails loggedUser = (UserCustomDetails) authentication.getPrincipal();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+
+        // 2. Seguridad Crítica: Si no es admin y el ID no coincide, es un ataque
+        if (!isAdmin && clientUser.getId() != loggedUser.getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes editar a otros usuarios");
+        }
+
+        User updatedUser = new User();
+
+        if (!isAdmin) {
+            User oldUser = userService.getUser(clientUser.getId());
+
+            updatedUser.setId(oldUser.getId());
+            updatedUser.setName(oldUser.getName());
+            updatedUser.setSurname(oldUser.getSurname());
+            updatedUser.setRole(oldUser.getRole());
+            updatedUser.setToken(oldUser.getToken());
+
+            updatedUser.setUsername(clientUser.getUsername());
+            updatedUser.setPassword(clientUser.getPassword());
+        } else {
+            updatedUser = clientUser;
+        }
 
         System.out.println("Update petition received");
         // Guardamos en la base de datos
-        userService.updateUser(user);
+        userService.updateUser(updatedUser);
 
         // Redirigimos a la lista de usuarios
-        return "redirect:/profile/" + user.getId();
+        return "redirect:/profile/" + updatedUser.getId();
     }
 
     @PostMapping("/users/delete")
